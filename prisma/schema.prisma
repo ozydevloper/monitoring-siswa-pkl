@@ -19,7 +19,8 @@ enum TypeStatus {
 
 model Siswa {
   id            String   @unique @default(uuid())
-  nama_lengkap  String
+  username  String
+  password String
   tempat_pkl_id String
   guru_id String
   absensi_hari AbsensiHari[]
@@ -40,7 +41,7 @@ model TempatPKL {
 
 model AbsensiHari {
   id String @unique @default(uuid())
-  name String
+  name DateTime
   siswa_id String
   absensi_masuk_id  AbsensiMasuk?  
   absensi_pulang_id AbsensiPulang?
@@ -50,34 +51,45 @@ model AbsensiHari {
 
 model AbsensiMasuk {
   id       String  @unique @default(cuid())
-  name     String
+  name     DateTime
 
   status TypeStatus @default(HADIR)
   approval Boolean
   image String[]
   note String
+  absensi_hari     String @unique
+  approval_inbox ApprovalInbox?
 
-  absensi_hari_relation   String  @unique 
-
-  absensi_hari     AbsensiHari    @relation(fields: [absensi_hari_relation], references: [id]) 
+  absensi_hari_relation   AbsensiHari    @relation(fields: [absensi_hari], references: [id]) 
 }
 
 model AbsensiPulang {
   id String @unique @default(cuid())
-  name String
+  name DateTime
 
   status TypeStatus @default(HADIR)
-  approval Boolean
+  approval Boolean @default(false)
   image String[]
   note String
+  absensi_hari String @unique
+  approval_inbox ApprovalInbox?
 
-  absensi_hari_relation String @unique
+  absensi_hari_relation AbsensiHari @relation(fields: [absensi_hari], references: [id])
 
-  absensi_hari AbsensiHari @relation(fields: [absensi_hari_relation], references: [id])
 }
 
 model Guru {
   id String @unique @default(uuid())
-  name String
+  username String
+  password String
   siswa Siswa[]
+}
+
+model ApprovalInbox {
+id String @unique @default(uuid())
+absensi_masuk_id String @unique
+absensi_pulang_id String @unique
+
+absensi_masuk_relation AbsensiMasuk @relation(fields: [absensi_masuk_id], references: [id])
+absensi_pulang_relation AbsensiPulang @relation(fields: [absensi_pulang_id], references: [id])
 }

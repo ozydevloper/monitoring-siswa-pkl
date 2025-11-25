@@ -8,6 +8,7 @@ import {
 import { formatDate } from "@/lib/formatDate";
 import { EllipsisVertical } from "lucide-react";
 import { TypeStatus } from "../generated/prisma/enums";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   return (
@@ -97,9 +98,7 @@ export default function Page() {
             </div>
           </div>
           <div className="h-full flex items-center justify-between gap-x-1">
-            <CardParent className="bg-green-100 font-semibold text-green-500 border border-green-200">
-              Masuk
-            </CardParent>
+            <Button color="green">Masuk</Button>
             <EllipsisVertical size={15} />
           </div>
         </CardParent>
@@ -113,9 +112,7 @@ export default function Page() {
             </div>
           </div>
           <div className="h-full flex items-center justify-between gap-x-1">
-            <CardParent className="bg-red-100 font-semibold text-red-500 border border-red-200">
-              Pulang
-            </CardParent>
+            <Button color="red">Pulang</Button>
             <EllipsisVertical size={15} />
           </div>
         </CardParent>
