@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Siswa {
+  id            String   @unique @default(uuid())
+  nama_lengkap  String
+  absen         Int
+  tanggal_lahir DateTime
+  kelas         String
+
+  guru_relation Guru?   @relation(fields: [guruId], references: [id])
+  guruId        String?
+}
+
+model Guru {
+  id    String  @unique @default(uuid())
+  name  String
+  murid Siswa[]
+}
+
+model Absensi {
+  id     String @unique @default(uuid())
+  guruId String @unique
+}
