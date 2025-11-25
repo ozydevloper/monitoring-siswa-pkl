@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/icon-status";
 import { formatDate } from "@/lib/formatDate";
 import { EllipsisVertical } from "lucide-react";
+import { TypeStatus } from "../generated/prisma/enums";
 
 export default function Page() {
   return (
@@ -17,9 +18,16 @@ export default function Page() {
             <p className="font-bold text-base text-muted-foreground">
               Nama Siswa
             </p>
-            <p className="text-xs font-light ">PKL Cawang, ICONNECT+</p>
+            <p className="text-xs font-light text-muted-foreground">
+              PKL Cawang, ICONNECT+
+            </p>
+            <p className="text-[0.650rem] font-bold text-muted-foreground ">
+              Nama Guru
+            </p>
           </div>
-          <div className="font-bold text-xl text-muted-foreground bg-green-100 h-full flex items-center justify-center text-center rounded-md px-2 border-2 border-green-200">
+          <div className="border h-full"></div>
+
+          <div className="font-bold text-xl text-muted-foreground bg-green-100 flex items-center justify-center text-center rounded-md p-1.5 border-2 border-green-200">
             MUTU
           </div>
         </CardParent>

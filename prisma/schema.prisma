@@ -7,24 +7,77 @@ datasource db {
   provider = "postgresql"
 }
 
+
+
+enum TypeStatus {
+  HADIR
+  TIDAK_HADIR
+  IZIN
+  SAKIT
+  ALPHA
+}
+
 model Siswa {
   id            String   @unique @default(uuid())
   nama_lengkap  String
-  absen         Int
-  tanggal_lahir DateTime
-  kelas         String
+  tempat_pkl_id String
+  guru_id String
+  absensi_hari AbsensiHari[]
 
-  guru_relation Guru?   @relation(fields: [guruId], references: [id])
-  guruId        String?
+  guru_relation Guru @relation(fields: [guru_id], references: [id])
+  tempat_pkl_relation TempatPKL @relation(fields: [tempat_pkl_id], references: [id])
+  }
+
+
+model TempatPKL {
+  id String @unique @default(uuid())
+  name String @unique
+  jam_masuk String
+  jam_pulang String
+
+  siswa Siswa[]
+}
+
+model AbsensiHari {
+  id String @unique @default(uuid())
+  name String
+  siswa_id String
+  absensi_masuk_id  AbsensiMasuk?  
+  absensi_pulang_id AbsensiPulang?
+  
+  siswa_relation Siswa @relation(fields: [siswa_id], references: [id])
+}
+
+model AbsensiMasuk {
+  id       String  @unique @default(cuid())
+  name     String
+
+  status TypeStatus @default(HADIR)
+  approval Boolean
+  image String[]
+  note String
+
+  absensi_hari_relation   String  @unique 
+
+  absensi_hari     AbsensiHari    @relation(fields: [absensi_hari_relation], references: [id]) 
+}
+
+model AbsensiPulang {
+  id String @unique @default(cuid())
+  name String
+
+  status TypeStatus @default(HADIR)
+  approval Boolean
+  image String[]
+  note String
+
+  absensi_hari_relation String @unique
+
+  absensi_hari AbsensiHari @relation(fields: [absensi_hari_relation], references: [id])
 }
 
 model Guru {
-  id    String  @unique @default(uuid())
-  name  String
-  murid Siswa[]
-}
-
-model Absensi {
-  id     String @unique @default(uuid())
-  guruId String @unique
+  id String @unique @default(uuid())
+  name String
+  siswa Siswa[]
 }
