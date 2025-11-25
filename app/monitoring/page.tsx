@@ -1,15 +1,21 @@
 import { CardParent } from "@/components/ui/card";
 import { Masuk } from "@/components/ui/color-status";
 import { ItemInbox } from "@/components/ui/item-approval-inbox";
+import { TabelMurid } from "@/components/ui/tabel";
 import { formatDate } from "@/lib/formatDate";
+import { Menu } from "lucide-react";
 import Image from "next/image";
 
 export default function Page() {
   return (
-    <div className="flex w-full h-dvh items-center flex-col">
+    <div className="flex w-full h-dvh items-center flex-col p-2 md:p-0 md:pt-2 gap-y-2">
+      <div className="left-3 text-muted-foreground bg-green-100  p-2 rounded-md hidden md:absolute md:block">
+        <Menu />
+      </div>
+
       <div className="flex flex-col md:flex-row gap-1.5 w-full md:max-w-fit items-center md:items-start justify-center">
         <div className="max-h-fit w-full md:max-w-2xs">
-          <CardParent className="w-full bg-green-50">
+          <CardParent className="w-full bg-green-50 flex-row items-center justify-between">
             <div className="flex flex-col w-full truncate ">
               <p className="font-bold text-base text-muted-foreground">
                 Nama Guru Monitoring
@@ -17,6 +23,9 @@ export default function Page() {
               <p className="text-xs font-light text-muted-foreground">
                 SMK Muhammadiyah 1 Jakarta
               </p>
+            </div>
+            <div className="md:hidden">
+              <Menu className="text-muted-foreground" />
             </div>
           </CardParent>
           <div className="w-full h-49 relative hidden md:block">
@@ -49,6 +58,8 @@ export default function Page() {
           </CardParent>
         </CardParent>
       </div>
+
+      <TabelMurid />
     </div>
   );
 }

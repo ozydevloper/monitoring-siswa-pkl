@@ -17,9 +17,14 @@ enum TypeStatus {
   ALPHA
 }
 
+enum TypeRole {
+  GURU
+  MURID
+}
+
 model Siswa {
   id            String   @unique @default(uuid())
-  username  String
+  name  String @unique
   password String
   tempat_pkl_id String
   guru_id String
@@ -80,7 +85,8 @@ model AbsensiPulang {
 
 model Guru {
   id String @unique @default(uuid())
-  username String
+  name String @unique
+  role String
   password String
   siswa Siswa[]
 }
