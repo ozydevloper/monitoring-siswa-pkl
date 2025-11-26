@@ -9,10 +9,10 @@ import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
 export const Login = ({
-  name,
+  namePage,
   redirect_to,
 }: {
-  name: string;
+  namePage: string;
   redirect_to: string;
 }) => {
   const [nameLogin, setNameLogin] = useState<string>("");
@@ -35,7 +35,7 @@ export const Login = ({
         <div className="w-full flex items-center justify-center md:mb-5">
           <div className="max-w-xs flex flex-col items-center justify-center gap-y-5">
             <Input
-              placeholder={name}
+              placeholder={namePage}
               onChange={(e) => setNameLogin(e.target.value)}
             />
             <div className="flex items-center justify-between gap-x-1 relative">
@@ -70,8 +70,12 @@ export const Login = ({
                   description: "Tunggu sebentar...",
                 });
                 signIn("credentials", {
-                  name: nameLogin,
-                  password: passwordLogin,
+                  namelogin: nameLogin,
+                  passwordlogin: passwordLogin,
+                  role: namePage,
+                  redirectTo: `${
+                    namePage === "Siswa" ? "/siswa" : "/monitoring"
+                  }`,
                 });
               }}
               className="p-3 rounded-md font-bold px-10 active:scale-97 transition-all ease-in-out duration-300 active:bg-green-500 active:text-green-100 bg-green-100 text-green-500 border border-green-200"

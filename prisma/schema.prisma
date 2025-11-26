@@ -28,6 +28,8 @@ model Siswa {
   password String
   tempat_pkl_id String
   guru_id String
+  role String @default("SISWA")
+
   absensi_hari AbsensiHari[]
 
   guru_relation Guru @relation(fields: [guru_id], references: [id])
@@ -86,7 +88,7 @@ model AbsensiPulang {
 model Guru {
   id String @unique @default(uuid())
   name String @unique
-  role String
+  role String @default("GURU")
   password String
   siswa Siswa[]
 }

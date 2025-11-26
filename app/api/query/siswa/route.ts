@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { hashPassword } from "@/lib/hashSalt";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   const allSiswa = await prisma.siswa.findMany({
@@ -15,4 +16,19 @@ export async function GET() {
   if (allSiswa.length === 0)
     return NextResponse.json({ data: "Data tidak ditemukan" });
   return NextResponse.json({ data: allSiswa });
+}
+
+export async function POST(req: NextRequest) {
+  const { newName, newPassword, guru_id, tempat_pkl_id } = await req.json();
+  const hashedPassword = await hashPassword(newPassword);
+
+  const newSiswaCreated = await prisma.siswa.create({
+    data: {
+      name: newName,
+      password: hashedPassword,
+      guru_id: guru_id,
+      tempat_pkl_id: tempat_pkl_id,
+    },
+  });
+  return NextResponse.json({ data: `Berhasil membuat, ${newName}` });
 }

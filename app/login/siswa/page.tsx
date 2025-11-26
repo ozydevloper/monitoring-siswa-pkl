@@ -1,5 +1,5 @@
 import { Login } from "@/components/ui/login";
 
 export default function Page() {
-  return <Login name="Siswa" redirect_to="guru" />;
+  return <Login namePage="Siswa" redirect_to="guru" />;
 }

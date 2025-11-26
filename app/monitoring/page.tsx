@@ -1,12 +1,16 @@
+"use client";
 import { CardParent } from "@/components/ui/card";
 import { Masuk } from "@/components/ui/color-status";
 import { ItemInbox } from "@/components/ui/item-approval-inbox";
 import { TabelMurid } from "@/components/ui/tabel";
 import { formatDate } from "@/lib/formatDate";
 import { Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function Page() {
+  const { data: session } = useSession();
   return (
     <div className="flex w-full h-dvh items-center flex-col p-2 md:p-0 md:pt-2 gap-y-2">
       <div className="left-3 text-muted-foreground bg-green-100  p-2 rounded-md hidden md:absolute md:block">
@@ -18,7 +22,7 @@ export default function Page() {
           <CardParent className="w-full bg-green-50 flex-row items-center justify-between">
             <div className="flex flex-col w-full truncate ">
               <p className="font-bold text-base text-muted-foreground">
-                Nama Guru Monitoring
+                {session?.user?.name ?? "Nama Guru"}
               </p>
               <p className="text-xs font-light text-muted-foreground">
                 SMK Muhammadiyah 1 Jakarta
