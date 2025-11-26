@@ -7,8 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
-
 enum TypeStatus {
   HADIR
   TIDAK_HADIR
@@ -23,81 +21,81 @@ enum TypeRole {
 }
 
 model Siswa {
-  id            String   @unique @default(uuid())
-  name  String @unique
-  password String
+  id            String @unique @default(uuid())
+  name          String @unique
+  password      String
   tempat_pkl_id String
-  guru_id String
-  role String @default("SISWA")
+  guru_id       String
+  role          String @default("SISWA")
 
   absensi_hari AbsensiHari[]
 
-  guru_relation Guru @relation(fields: [guru_id], references: [id])
+  guru_relation       Guru      @relation(fields: [guru_id], references: [id])
   tempat_pkl_relation TempatPKL @relation(fields: [tempat_pkl_id], references: [id])
-  }
-
+}
 
 model TempatPKL {
-  id String @unique @default(uuid())
-  name String @unique
-  jam_masuk String
+  id         String @unique @default(uuid())
+  name       String @unique
+  jam_masuk  String
   jam_pulang String
 
   siswa Siswa[]
 }
 
 model AbsensiHari {
-  id String @unique @default(uuid())
-  name DateTime
-  siswa_id String
-  absensi_masuk_id  AbsensiMasuk?  
+  id                String         @unique @default(uuid())
+  name              DateTime
+  siswa_id          String
+  absensi_masuk_id  AbsensiMasuk?
   absensi_pulang_id AbsensiPulang?
-  
+
   siswa_relation Siswa @relation(fields: [siswa_id], references: [id])
 }
 
 model AbsensiMasuk {
-  id       String  @unique @default(cuid())
-  name     DateTime
+  id   String   @unique @default(cuid())
+  name DateTime
 
-  status TypeStatus @default(HADIR)
-  approval Boolean
-  image String[]
-  note String
-  absensi_hari     String @unique
-  approval_inbox ApprovalInbox?
+  status         TypeStatus     @default(HADIR)
+  approval       Boolean
+  image          String[]
+  note           String
+  absensi_hari   String         @unique
+  approval_inbox ApprovalInbox? @relation(fields: [approvalInboxId], references: [id])
 
-  absensi_hari_relation   AbsensiHari    @relation(fields: [absensi_hari], references: [id]) 
+  absensi_hari_relation AbsensiHari @relation(fields: [absensi_hari], references: [id])
+  approvalInboxId       String?
 }
 
 model AbsensiPulang {
-  id String @unique @default(cuid())
+  id   String   @unique @default(cuid())
   name DateTime
 
-  status TypeStatus @default(HADIR)
-  approval Boolean @default(false)
-  image String[]
-  note String
-  absensi_hari String @unique
-  approval_inbox ApprovalInbox?
+  status                  TypeStatus    @default(HADIR)
+  approval                Boolean       @default(false)
+  image                   String[]
+  note                    String
+  absensi_hari            String        @unique
+  approval_inbox_relation ApprovalInbox @relation(fields: [approval_inbox_id], references: [id])
 
   absensi_hari_relation AbsensiHari @relation(fields: [absensi_hari], references: [id])
 
+  approval_inbox_id String
 }
 
 model Guru {
-  id String @unique @default(uuid())
-  name String @unique
-  role String @default("GURU")
+  id       String  @unique @default(uuid())
+  name     String  @unique
+  role     String  @default("GURU")
   password String
-  siswa Siswa[]
+  siswa    Siswa[]
 }
 
 model ApprovalInbox {
-id String @unique @default(uuid())
-absensi_masuk_id String @unique
-absensi_pulang_id String @unique
+  id   String   @unique @default(uuid())
+  name DateTime @unique @default(now())
 
-absensi_masuk_relation AbsensiMasuk @relation(fields: [absensi_masuk_id], references: [id])
-absensi_pulang_relation AbsensiPulang @relation(fields: [absensi_pulang_id], references: [id])
+  absensiMasuk  AbsensiMasuk[]
+  absensiPulang AbsensiPulang[]
 }
