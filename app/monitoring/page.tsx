@@ -1,10 +1,8 @@
 "use client";
 import { CardParent } from "@/components/ui/card";
-import { Masuk } from "@/components/ui/color-status";
 import { ItemInbox } from "@/components/ui/item-approval-inbox";
-import { TabelMurid } from "@/components/ui/tabel";
-import { formatDate } from "@/lib/formatDate";
-import { Menu } from "lucide-react";
+import { TabelMurid, TabelTempatPKL } from "@/components/ui/tabel";
+import { DoorOpen } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -13,8 +11,11 @@ export default function Page() {
   const { data: session } = useSession();
   return (
     <div className="flex w-full h-dvh items-center flex-col p-2 md:p-0 md:pt-2 gap-y-2">
-      <div className="left-3 text-muted-foreground bg-green-100  p-2 rounded-md hidden md:absolute md:block">
-        <Menu />
+      <div
+        onClick={() => redirect("/logout")}
+        className="right-3  bg-red-100  p-2 rounded-md hidden md:absolute md:block text-red-500"
+      >
+        <DoorOpen />
       </div>
 
       <div className="flex flex-col md:flex-row gap-1.5 w-full md:max-w-fit items-center md:items-start justify-center">
@@ -28,8 +29,11 @@ export default function Page() {
                 SMK Muhammadiyah 1 Jakarta
               </p>
             </div>
-            <div className="md:hidden">
-              <Menu className="text-muted-foreground" />
+            <div
+              className="w-fit h-fit bg-red-100 p-1 rounded-md md:hidden text-red-500 "
+              onClick={() => redirect("/logout")}
+            >
+              <DoorOpen size={20} />
             </div>
           </CardParent>
           <div className="w-full h-49 relative hidden md:block">
@@ -63,7 +67,10 @@ export default function Page() {
         </CardParent>
       </div>
 
-      <TabelMurid />
+      <div className="flex flex-col md:flex-row gap-2">
+        <TabelMurid />
+        <TabelTempatPKL />
+      </div>
     </div>
   );
 }

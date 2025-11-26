@@ -29,19 +29,19 @@ export default auth(async (request: NextAuthRequest) => {
   }
 
   if (request.nextUrl.pathname.startsWith("/login") && request.auth) {
-    return NextResponse.redirect(new URL("/logout", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   if (
     request.nextUrl.pathname.startsWith("/siswa") &&
-    request.auth?.user?.role !== "SISWA"
+    request.auth?.user?.role === "GURU"
   ) {
-    return NextResponse.redirect(new URL("/logout", request.url));
+    return NextResponse.redirect(new URL("/monitoring", request.url));
   }
   if (
     request.nextUrl.pathname.startsWith("/monitoring") &&
-    request.auth?.user?.role !== "GURU"
+    request.auth?.user?.role === "SISWA"
   ) {
-    return NextResponse.redirect(new URL("/logout", request.url));
+    return NextResponse.redirect(new URL("/siswa", request.url));
   }
 });

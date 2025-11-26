@@ -1,22 +1,20 @@
 "use client";
 import { CardParent } from "@/components/ui/card";
-import {
-  IconCheck,
-  IconCircle,
-  IconInfo,
-  IconX,
-} from "@/components/ui/icon-status";
-import { formatDate } from "@/lib/formatDate";
-import { EllipsisVertical } from "lucide-react";
-import { TypeStatus } from "../generated/prisma/enums";
+import { IconX } from "@/components/ui/icon-status";
+import { DoorOpen, LucideLoader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
 import { Prisma } from "../generated/prisma/client";
+import { redirect } from "next/navigation";
+import { useState } from "react";
+import CardAbsensiMasuk from "@/components/ui/card-absensi";
 
 export default function Page() {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const [onCreate, setOnCreate] = useState<boolean>(false);
 
   const getSiswa = useQuery<{
     data: Prisma.SiswaGetPayload<{
@@ -44,6 +42,8 @@ export default function Page() {
         absensi_masuk_id: true;
         absensi_pulang_id: true;
         siswa_relation: true;
+        absensi_masuk_relation: true;
+        absensipulang_relation: true;
       };
     }>;
   }>({
@@ -54,6 +54,18 @@ export default function Page() {
         body: JSON.stringify({ id: session?.user?.id }),
       }).then((e) => e.json()),
     enabled: !!session,
+  });
+
+  const mutationAbsensiHari = useMutation({
+    mutationFn: () =>
+      apiFetch("/api/query/absensi_hari/createById", {
+        method: "POST",
+        body: JSON.stringify({ id: session?.user?.id }),
+      }).then((e) => e.json()),
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["absensi_hari"],
+      }),
   });
 
   return (
@@ -73,8 +85,11 @@ export default function Page() {
           </div>
           <div className="border h-full"></div>
 
-          <div className="font-bold text-xl text-muted-foreground bg-green-100 flex items-center justify-center text-center rounded-md p-1.5 border-2 border-green-200">
-            MUTU
+          <div
+            onClick={() => redirect("/logout")}
+            className="font-bold text-xl text-muted-foreground bg-red-100 flex items-center justify-center text-center rounded-md p-1.5 border-2 border-red-200"
+          >
+            <DoorOpen />
           </div>
         </CardParent>
         <div className="border w-xs md:w-sm"></div>
@@ -106,6 +121,7 @@ export default function Page() {
           </CardParent>
 
           <div className="border w-xs md:w-sm"></div>
+
           <CardParent className="min-w-fit">
             <div className="flex items-center justify-between gap-x-2">
               <div className="min-w-fit font-semibold text-muted-foreground">
@@ -138,39 +154,51 @@ export default function Page() {
 
         <div className="border w-xs md:w-sm"></div>
 
-        <div className="flex flex-col gap-y-1 w-full h-fit relative">
-          <Button color="green" className="text-sm">
-            Absen hari ini
-          </Button>
+        <div className="w-full flex flex-col gap-y-2 relative">
+          <div
+            className={`absolute inset-0 bg-foreground/4 rounded-md backdrop-blur-[0.08rem] top-0 z-50  items-center justify-center py-5 ${getAbsensiHari.data?.data ? "hidden" : "flex"}`}
+          >
+            <CardParent className="w-xs bg-background h-full items-center justify-evenly">
+              <div className="border w-full"></div>
+
+              <button
+                onClick={() => {
+                  setOnCreate(true);
+                  mutationAbsensiHari
+                    .mutateAsync()
+                    .then(() => setOnCreate(false));
+                }}
+                disabled={onCreate}
+                className="w-full"
+              >
+                <Button
+                  color="green"
+                  className="w-full text-center flex items-center justify-center"
+                >
+                  {!session || onCreate || getAbsensiHari.isLoading ? (
+                    <LucideLoader className="animate-spin" />
+                  ) : (
+                    "Absen"
+                  )}
+                </Button>
+              </button>
+              <div className="border w-full"></div>
+            </CardParent>
+          </div>
+          <div className="flex flex-col gap-y-1 w-full h-fit relative">
+            <Button color="green" className="text-sm">
+              Absen hari ini
+            </Button>
+          </div>
+          {getAbsensiHari.data?.data?.absensi_masuk_id ? (
+            "ada nih"
+          ) : (
+            <CardAbsensiMasuk id_absensi_hari={getAbsensiHari.data?.data?.id} />
+          )}
+          {getAbsensiHari.data?.data?.absensi_masuk_relation
+            ? "ada aja"
+            : "sebent"}
         </div>
-        <CardParent className="w-full flex flex-row items-center justify-between bg-green-50">
-          <div className="flex items-center justify-center w-fit gap-x-1 h-full">
-            <IconInfo />
-
-            <div className="border h-full"></div>
-            <div className="w-fit font-bold text-muted-foreground">
-              {formatDate(new Date())} - Sekarang
-            </div>
-          </div>
-          <div className="h-full flex items-center justify-between gap-x-1">
-            <Button color="green">Masuk</Button>
-            <EllipsisVertical size={15} />
-          </div>
-        </CardParent>
-
-        <CardParent className="w-full flex flex-row items-center justify-between bg-red-50 ">
-          <div className="flex items-center justify-center w-fit gap-x-1 h-full">
-            <IconInfo />
-            <div className="border h-full"></div>
-            <div className="w-fit font-bold text-muted-foreground ">
-              {formatDate(new Date())} - Sekarang
-            </div>
-          </div>
-          <div className="h-full flex items-center justify-between gap-x-1">
-            <Button color="red">Pulang</Button>
-            <EllipsisVertical size={15} />
-          </div>
-        </CardParent>
         <div className="border w-xs md:w-sm"></div>
       </CardParent>
     </div>

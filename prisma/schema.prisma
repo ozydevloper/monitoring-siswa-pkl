@@ -44,11 +44,14 @@ model TempatPKL {
 }
 
 model AbsensiHari {
-  id                String         @unique @default(uuid())
+  id                String   @unique @default(uuid())
   name              DateTime
   siswa_id          String
-  absensi_masuk_id  AbsensiMasuk?
-  absensi_pulang_id AbsensiPulang?
+  absensi_masuk_id  String?  @unique
+  absensi_pulang_id String?  @unique
+
+  absensi_masuk_relation AbsensiMasuk?  @relation(fields: [absensi_masuk_id], references: [id])
+  absensipulang_relation AbsensiPulang? @relation(fields: [absensi_pulang_id], references: [id])
 
   siswa_relation Siswa @relation(fields: [siswa_id], references: [id])
 }
@@ -61,11 +64,10 @@ model AbsensiMasuk {
   approval       Boolean
   image          String[]
   note           String
-  absensi_hari   String         @unique
+  absensi_hari   AbsensiHari?
   approval_inbox ApprovalInbox? @relation(fields: [approvalInboxId], references: [id])
 
-  absensi_hari_relation AbsensiHari @relation(fields: [absensi_hari], references: [id])
-  approvalInboxId       String?
+  approvalInboxId String?
 }
 
 model AbsensiPulang {
@@ -76,10 +78,8 @@ model AbsensiPulang {
   approval                Boolean       @default(false)
   image                   String[]
   note                    String
-  absensi_hari            String        @unique
+  absensi_hari            AbsensiHari?
   approval_inbox_relation ApprovalInbox @relation(fields: [approval_inbox_id], references: [id])
-
-  absensi_hari_relation AbsensiHari @relation(fields: [absensi_hari], references: [id])
 
   approval_inbox_id String
 }
