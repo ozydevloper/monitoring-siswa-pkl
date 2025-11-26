@@ -6,10 +6,20 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
-import { Prisma } from "../generated/prisma/client";
+import {
+  AbsensiMasuk,
+  AbsensiPulang,
+  Prisma,
+} from "../generated/prisma/client";
 import { redirect } from "next/navigation";
 import { useState } from "react";
-import CardAbsensiMasuk from "@/components/ui/card-absensi";
+import CardAbsensiMasuk, {
+  CardAbsensiPulang,
+} from "@/components/ui/card-absensi";
+import {
+  CardHistoryAbsensiMasuk,
+  CardHistoryAbsensiPulang,
+} from "@/components/ui/card-history-absensi";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -111,7 +121,10 @@ export default function Page() {
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1">
                 <div>Status:</div>
-                <div className="font-bold">-</div>
+                <div className="font-bold">
+                  {getAbsensiHari?.data?.data?.absensi_masuk_relation?.status ??
+                    "-"}
+                </div>
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1">
                 <div>Approval:</div>
@@ -138,7 +151,10 @@ export default function Page() {
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1">
                 <div>Status:</div>
-                <div className="font-bold">-</div>
+                <div className="font-bold">
+                  {getAbsensiHari.data?.data?.absensipulang_relation?.status ??
+                    "-"}
+                </div>
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1 ">
                 <div>Approval:</div>
@@ -156,7 +172,9 @@ export default function Page() {
 
         <div className="w-full flex flex-col gap-y-2 relative">
           <div
-            className={`absolute inset-0 bg-foreground/4 rounded-md backdrop-blur-[0.08rem] top-0 z-50  items-center justify-center py-5 ${getAbsensiHari.data?.data ? "hidden" : "flex"}`}
+            className={`absolute inset-0 bg-foreground/4 rounded-md backdrop-blur-[0.08rem] top-0 z-50  items-center justify-center py-5 ${
+              getAbsensiHari.data?.data ? "hidden" : "flex"
+            }`}
           >
             <CardParent className="w-xs bg-background h-full items-center justify-evenly">
               <div className="border w-full"></div>
@@ -186,18 +204,35 @@ export default function Page() {
             </CardParent>
           </div>
           <div className="flex flex-col gap-y-1 w-full h-fit relative">
-            <Button color="green" className="text-sm">
+            <Button color="blue" className="text-sm">
               Absen hari ini
             </Button>
           </div>
-          {getAbsensiHari.data?.data?.absensi_masuk_id ? (
-            "ada nih"
+          {getAbsensiHari.data?.data?.absensi_masuk_id ||
+          getAbsensiHari.data?.data?.absensi_masuk_relation ? (
+            <CardHistoryAbsensiMasuk
+              data={
+                getAbsensiHari.data.data.absensi_masuk_relation as AbsensiMasuk
+              }
+            />
           ) : (
-            <CardAbsensiMasuk id_absensi_hari={getAbsensiHari.data?.data?.id} />
+            <CardAbsensiMasuk
+              nama_siswa={getAbsensiHari.data?.data?.siswa_relation?.name}
+              id_absensi_hari={getAbsensiHari.data?.data?.id}
+            />
           )}
-          {getAbsensiHari.data?.data?.absensi_masuk_relation
-            ? "ada aja"
-            : "sebent"}
+          {getAbsensiHari.data?.data?.absensi_pulang_id ? (
+            <CardHistoryAbsensiPulang
+              data={
+                getAbsensiHari.data.data.absensipulang_relation as AbsensiPulang
+              }
+            />
+          ) : (
+            <CardAbsensiPulang
+              nama_siswa={getAbsensiHari.data?.data?.siswa_relation?.name}
+              id_absensi_hari={getAbsensiHari.data?.data?.id}
+            />
+          )}
         </div>
         <div className="border w-xs md:w-sm"></div>
       </CardParent>

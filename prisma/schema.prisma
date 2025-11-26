@@ -13,6 +13,7 @@ enum TypeStatus {
   IZIN
   SAKIT
   ALPHA
+  PULANG
 }
 
 enum TypeRole {
@@ -60,6 +61,7 @@ model AbsensiMasuk {
   id   String   @unique @default(cuid())
   name DateTime
 
+nama_siswa String
   status         TypeStatus     @default(HADIR)
   approval       Boolean
   image          String[]
@@ -73,15 +75,15 @@ model AbsensiMasuk {
 model AbsensiPulang {
   id   String   @unique @default(cuid())
   name DateTime
-
+nama_siswa String
   status                  TypeStatus    @default(HADIR)
   approval                Boolean       @default(false)
   image                   String[]
   note                    String
   absensi_hari            AbsensiHari?
-  approval_inbox_relation ApprovalInbox @relation(fields: [approval_inbox_id], references: [id])
+  approval_inbox_relation ApprovalInbox? @relation(fields: [approval_inbox_id], references: [id])
 
-  approval_inbox_id String
+  approval_inbox_id String?
 }
 
 model Guru {

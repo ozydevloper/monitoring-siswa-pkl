@@ -9,13 +9,22 @@ export async function POST(req: NextRequest) {
 
   const absesnsi_hari = await prisma.absensiHari.findFirst({
     where: {
-      siswa_relation: {
-        id: id,
-      },
-      name: {
-        gt: filter_tanggal.gt,
-        lt: filter_tanggal.lt,
-      },
+      AND: [
+        {
+          siswa_id: id,
+        },
+        {
+          name: {
+            gte: filter_tanggal.gt,
+            lt: filter_tanggal.lt,
+          },
+        },
+      ],
+    },
+    include: {
+      absensi_masuk_relation: true,
+      absensipulang_relation: true,
+      siswa_relation: true,
     },
   });
 

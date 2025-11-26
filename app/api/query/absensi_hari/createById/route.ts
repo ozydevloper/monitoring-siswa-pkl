@@ -1,13 +1,16 @@
 import { prisma } from "@/lib/db";
+import { getHariIni } from "@/lib/getDatetime";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const { id } = await req.json();
 
+  const filterTanggal = getHariIni();
+
   const absesnsi_hari = await prisma.absensiHari.create({
     data: {
       siswa_id: id,
-      name: new Date(),
+      name: filterTanggal.gt,
     },
     select: {
       id: true,

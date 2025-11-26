@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  console.log("masuk");
+  console.log("pulang");
   console.log(isInboxExist);
 
   if (!isInboxExist) {
@@ -37,17 +37,17 @@ export async function POST(req: NextRequest) {
     console.log(isInboxExist);
   }
 
-  console.log("masuk");
+  console.log("pulang");
   console.log(isInboxExist);
 
-  const absensi_masuk = await prisma.absensiMasuk.create({
+  const absensi_pulang = await prisma.absensiPulang.create({
     data: {
       approval: false,
       name: time_now,
       note: note,
       image: image,
       status: status,
-      approvalInboxId: isInboxExist.id,
+      approval_inbox_id: isInboxExist.id,
       nama_siswa: nama_siswa,
     },
     select: {
@@ -60,8 +60,8 @@ export async function POST(req: NextRequest) {
       id: id_absensi_hari,
     },
     data: {
-      absensi_masuk_id: absensi_masuk.id,
+      absensi_pulang_id: absensi_pulang.id,
     },
   });
-  return NextResponse.json({ data: absensi_masuk });
+  return NextResponse.json({ data: absensi_pulang });
 }
