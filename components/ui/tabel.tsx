@@ -122,7 +122,7 @@ export const TabelTempatPKL = () => {
                       }),
                     {
                       loading: "Sedang membuat...",
-                    },
+                    }
                   );
                 }}
               >
@@ -133,7 +133,7 @@ export const TabelTempatPKL = () => {
         </CardParent>
       </div>
 
-      <div className="text-[0.650rem] font-bold">Tabel Siswa</div>
+      <div className="text-[0.650rem] font-bold">Tabel Tempat PKL</div>
       <div className="flex items-center justify-between gap-x-2">
         <Button
           onClick={() => setIsCreate(true)}
@@ -161,7 +161,7 @@ export const TabelTempatPKL = () => {
           Data tidak ditemukan
         </CardParent>
       ) : (
-        <CardParent className="bg-background min-w-fit w-full">
+        <CardParent className="bg-background w-full h-64 overflow-auto">
           <table>
             <thead>
               <tr>
@@ -349,7 +349,7 @@ export const TabelMurid = () => {
                     }),
                   {
                     loading: "Sedang membuat...",
-                  },
+                  }
                 );
               }}
             >
@@ -387,7 +387,7 @@ export const TabelMurid = () => {
           Data tidak ditemukan
         </CardParent>
       ) : (
-        <CardParent className="bg-background min-w-fit w-full">
+        <CardParent className="bg-background  w-full h-64 overflow-auto md:max-w-md">
           <table>
             <thead>
               <tr>

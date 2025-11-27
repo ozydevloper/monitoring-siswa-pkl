@@ -1,10 +1,20 @@
+import { TypeStatus } from "@/app/generated/prisma/enums";
 import { prisma } from "@/lib/db";
 import { getHariIni } from "@/lib/getDatetime";
+import { UploadImage } from "@/lib/uploadImage";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { time_now, id_absensi_hari, note, status, image, nama_siswa } =
-    await req.json();
+  const formData = await req.formData();
+  const image = formData.get("image");
+  const time_now = formData.get("time_now");
+  const id_absensi_hari = formData.get("id_absensi_hari");
+  const note = formData.get("note");
+  const status = formData.get("status");
+  const nama_siswa = formData.get("nama_siswa");
+
+  // const { time_now, id_absensi_hari, note, status, image, nama_siswa } =
+  //   await req.json();
 
   const filterDate = getHariIni();
 
@@ -20,12 +30,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  console.log("pulang");
-  console.log(isInboxExist);
-
   if (!isInboxExist) {
-    console.log("otw");
-
     isInboxExist = await prisma.approvalInbox.create({
       data: {
         name: filterDate.gt,
@@ -34,21 +39,19 @@ export async function POST(req: NextRequest) {
         id: true,
       },
     });
-    console.log(isInboxExist);
   }
 
-  console.log("pulang");
-  console.log(isInboxExist);
+  const result_image = await UploadImage(image as File);
 
   const absensi_pulang = await prisma.absensiPulang.create({
     data: {
       approval: false,
-      name: time_now,
-      note: note,
-      image: image,
-      status: status,
+      name: new Date(time_now as string),
+      note: note as string,
+      image: [result_image.secure_url, result_image.public_id],
+      status: status as TypeStatus,
       approval_inbox_id: isInboxExist.id,
-      nama_siswa: nama_siswa,
+      nama_siswa: nama_siswa as string,
     },
     select: {
       id: true,
@@ -63,5 +66,5 @@ export async function POST(req: NextRequest) {
       absensi_pulang_id: absensi_pulang.id,
     },
   });
-  return NextResponse.json({ data: absensi_pulang });
+  return NextResponse.json({ data: updateAbsensihari });
 }

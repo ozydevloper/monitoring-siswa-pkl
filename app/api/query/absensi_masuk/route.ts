@@ -20,9 +20,6 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  console.log("masuk");
-  console.log(isInboxExist);
-
   if (!isInboxExist) {
     console.log("otw");
 
@@ -34,11 +31,7 @@ export async function POST(req: NextRequest) {
         id: true,
       },
     });
-    console.log(isInboxExist);
   }
-
-  console.log("masuk");
-  console.log(isInboxExist);
 
   const absensi_masuk = await prisma.absensiMasuk.create({
     data: {

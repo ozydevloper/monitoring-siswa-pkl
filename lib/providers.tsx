@@ -1,5 +1,6 @@
 "use client";
 
+import { DetailAbsensi } from "@/components/ui/detail-absensi";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
@@ -20,6 +21,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <Toaster duration={5000} position="top-right" />
+        <DetailAbsensi />
         {children}
       </SessionProvider>
     </QueryClientProvider>

@@ -1,12 +1,13 @@
 "use client";
 import { CardParent } from "@/components/ui/card";
-import { IconX } from "@/components/ui/icon-status";
-import { DoorOpen, LucideLoader } from "lucide-react";
+import { IconInfo, IconX } from "@/components/ui/icon-status";
+import { DoorOpen, Loader, LucideLoader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
 import {
+  AbsensiHari,
   AbsensiMasuk,
   AbsensiPulang,
   Prisma,
@@ -17,9 +18,12 @@ import CardAbsensiMasuk, {
   CardAbsensiPulang,
 } from "@/components/ui/card-absensi";
 import {
+  CardHistoryAbsensiHari,
   CardHistoryAbsensiMasuk,
   CardHistoryAbsensiPulang,
 } from "@/components/ui/card-history-absensi";
+import { formatDate } from "@/lib/formatDate";
+import { FormAbsensi } from "@/components/ui/form-absensi";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -235,6 +239,24 @@ export default function Page() {
           )}
         </div>
         <div className="border w-xs md:w-sm"></div>
+        <CardParent className="bg-blue-50 w-full max-w-md">
+          <div className="w-full items-center justify-center text-center font-bold text-muted-foreground">
+            History Absensi
+          </div>
+          <CardParent className="bg-background h-28 overflow-auto">
+            {getSiswa.isLoading ? (
+              <div className="w-full h-full flex items-center justify-center text-center">
+                <Loader className="animate-spin" />
+              </div>
+            ) : getSiswa.error ? (
+              <div>{JSON.stringify(getSiswa.error)}</div>
+            ) : (
+              getSiswa.data?.data.absensi_hari.map((e, i) => (
+                <CardHistoryAbsensiHari key={i} data={e as AbsensiHari} />
+              ))
+            )}
+          </CardParent>
+        </CardParent>
       </CardParent>
     </div>
   );

@@ -8,6 +8,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
 import { Loader } from "lucide-react";
 import { TypeStatus } from "@/app/generated/prisma/enums";
+import { useKirimAbsensi } from "@/lib/zustand";
+import { FormAbsensi } from "./form-absensi";
 
 export function CardAbsensiPulang({
   id_absensi_hari,
@@ -19,19 +21,13 @@ export function CardAbsensiPulang({
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<string>("PULANG");
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const setMutateAbsensi = useKirimAbsensi((state) => state.setMutateAbsensi);
 
   const mutationAbsensiPulang = useMutation({
-    mutationFn: () =>
+    mutationFn: async (formData: FormData) =>
       apiFetch("/api/query/absensi_pulang", {
         method: "POST",
-        body: JSON.stringify({
-          time_now: new Date(),
-          id_absensi_hari: id_absensi_hari,
-          note: "Benran note",
-          status: status,
-          image: ["image url", "public id"],
-          nama_siswa: nama_siswa,
-        }),
+        body: formData,
       }),
     onSettled: () =>
       queryClient.invalidateQueries({
@@ -43,7 +39,13 @@ export function CardAbsensiPulang({
     <CardParent
       className={`w-full flex flex-row items-center justify-between bg-yellow-50`}
     >
-      <div className="flex items-center justify-center w-fit gap-x-1 h-full">
+      <FormAbsensi
+        id_absensi_hari={id_absensi_hari!}
+        nama_siswa={nama_siswa!}
+        status={status}
+      />
+
+      <div className="flex items-center justify-center w-fit gap-x-1 h-full ">
         <IconInfo />
         <div className="border h-full"></div>
         <div className="w-fit font-bold text-xs text-muted-foreground">
@@ -54,8 +56,7 @@ export function CardAbsensiPulang({
         <button
           disabled={isSubmit}
           onClick={() => {
-            setIsSubmit(true);
-            mutationAbsensiPulang.mutateAsync().then(() => setIsSubmit(false));
+            setMutateAbsensi(mutationAbsensiPulang.mutateAsync);
           }}
         >
           <Button color="red" className="text-[0.600rem]">

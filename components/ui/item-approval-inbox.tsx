@@ -1,14 +1,18 @@
 import { formatDate } from "@/lib/formatDate";
 import { CardParent } from "./card";
-import { Masuk } from "./color-status";
+
 import { AbsensiMasuk, AbsensiPulang } from "@/app/generated/prisma/client";
+import { useDetailAbsensi } from "@/lib/zustand";
 
 export const ItemInbox: React.FC<{
   data: AbsensiMasuk | AbsensiPulang;
 }> = ({ data }) => {
+  const setDataDetailAbsensi = useDetailAbsensi(
+    (state) => state.setDataDetailAbsensi
+  );
   return (
     <CardParent className="w-full h-fit flex flex-row gap-x-2 items-center justify-between">
-      <div className="w-fit h-fit">
+      <div className="w-fit h-fit" onClick={() => setDataDetailAbsensi(null)}>
         <div className="font-bold text-muted-foreground">{data.nama_siswa}</div>
         <div className="text-[0.650rem] font-light text-muted-foreground whitespace-nowrap">
           {formatDate(new Date(data.name), true)}

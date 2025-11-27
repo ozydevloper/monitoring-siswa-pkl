@@ -17,6 +17,5 @@ export async function GET(req: NextRequest) {
       absensiPulang: true,
     },
   });
-  console.log(inboxItem);
   return NextResponse.json({ data: inboxItem });
 }

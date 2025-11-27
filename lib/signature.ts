@@ -33,7 +33,6 @@ export function verifySignature(encoded: string, maxAgeMs = 10_000) {
 export async function apiFetch(input: RequestInfo, init?: RequestInit) {
   const signature = generateSignature();
   const headers = {
-    "Content-Type": "application/json",
     "nothing-to-see": signature,
     ...(init?.headers || {}),
   };
