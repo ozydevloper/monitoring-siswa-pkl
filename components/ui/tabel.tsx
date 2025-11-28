@@ -4,7 +4,7 @@ import { CardParent } from "./card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Prisma, TempatPKL } from "@/app/generated/prisma/client";
 import { Button } from "./button";
-import { ArrowUp, LoaderIcon, RefreshCcw } from "lucide-react";
+import { ArrowUp, Loader, LoaderIcon, RefreshCcw } from "lucide-react";
 import { Input } from "./input";
 import { useSession } from "next-auth/react";
 import {
@@ -27,6 +27,7 @@ export const TabelTempatPKL = () => {
   const [errorInput, setErrorInput] = useState<boolean>(false);
 
   const [onRefresh, setOnRefresh] = useState<boolean>(false);
+  const [onSubmit, setOnSubmit] = useState<boolean>(false);
 
   const headerTabel = ["name", "jam_masuk", "jam_pulang"];
   const queryClient = useQueryClient();
@@ -103,9 +104,9 @@ export const TabelTempatPKL = () => {
                 placeholder="Jam pulang"
                 className="bg-background"
               />
-              <Button
-                color={errorInput ? "red" : "green"}
-                className="text-center"
+              <button
+                disabled={onSubmit}
+                className="w-full"
                 onClick={() => {
                   if (newName === "" || jamMasuk === "" || jamPulang === "") {
                     return setErrorInput(true);
@@ -115,19 +116,26 @@ export const TabelTempatPKL = () => {
 
                   toast.promise(
                     async () =>
-                      await mutationNewTempatPKL.mutateAsync({
-                        name: newName,
-                        jam_masuk: jamMasuk,
-                        jam_pulang: jamPulang,
-                      }),
+                      await mutationNewTempatPKL
+                        .mutateAsync({
+                          name: newName,
+                          jam_masuk: jamMasuk,
+                          jam_pulang: jamPulang,
+                        })
+                        .then(() => setOnSubmit(false)),
                     {
                       loading: "Sedang membuat...",
                     }
                   );
                 }}
               >
-                Submit
-              </Button>
+                <Button
+                  color={errorInput ? "red" : "green"}
+                  className="text-center w-full"
+                >
+                  Submit
+                </Button>
+              </button>
             </CardParent>
           </CardParent>
         </CardParent>
@@ -197,10 +205,11 @@ export const TabelMurid = () => {
   const [newNameSiswa, setNewNameSiswa] = useState<string>("");
   const [newPasswordSiswa, setNewPasswordSiswa] = useState<string>("");
   const [newTempatPKLId, setTempatPKLId] = useState<string>("");
-  const [newGuruId, setGuruId] = useState<string>("");
+  const [newGuruId, setGuruId] = useState<string>(session);
   const [errorInput, setErrorInput] = useState<boolean>(false);
 
   const [onRefresh, setOnRefresh] = useState<boolean>(false);
+  const [onSubmit, setOnSubmit] = useState<boolean>(false);
 
   const headerTabel = ["name", "tempat_pkl", "nama_guru_monitoring"];
   const queryClient = useQueryClient();
@@ -323,38 +332,47 @@ export const TabelMurid = () => {
                 readOnly
               />
             </CardParent>
-            <Button
-              color={errorInput ? "red" : "green"}
-              className="text-center"
-              onClick={() => {
-                setGuruId(session?.user?.id ?? "Tidak tahu");
-                if (
-                  newNameSiswa === "" ||
-                  newPasswordSiswa === "" ||
-                  newTempatPKLId === "" ||
-                  newGuruId === ""
-                ) {
-                  return setErrorInput(true);
-                } else {
-                  setErrorInput(false);
-                }
-
-                toast.promise(
-                  async () =>
-                    await mutationNewSiswa.mutateAsync({
-                      newName: newNameSiswa,
-                      guru_id: newGuruId,
-                      newPassword: newPasswordSiswa,
-                      tempat_pkl_id: newTempatPKLId,
-                    }),
-                  {
-                    loading: "Sedang membuat...",
+            <button disabled={onSubmit}>
+              <Button
+                color={errorInput ? "red" : "green"}
+                className=" w-full text-center flex items-center justify-center"
+                onClick={() => {
+                  setOnSubmit(true);
+                  setGuruId(session?.user?.id ?? "Tidak tahu");
+                  if (
+                    newNameSiswa === "" ||
+                    newPasswordSiswa === "" ||
+                    newTempatPKLId === ""
+                  ) {
+                    setOnSubmit(false);
+                    return setErrorInput(true);
+                  } else {
+                    setErrorInput(false);
                   }
-                );
-              }}
-            >
-              Submit
-            </Button>
+
+                  toast.promise(
+                    async () =>
+                      await mutationNewSiswa
+                        .mutateAsync({
+                          newName: newNameSiswa,
+                          guru_id: session?.user?.id as string,
+                          newPassword: newPasswordSiswa,
+                          tempat_pkl_id: newTempatPKLId,
+                        })
+                        .then(() => setOnSubmit(false)),
+                    {
+                      loading: "Sedang membuat...",
+                    }
+                  );
+                }}
+              >
+                {onSubmit ? (
+                  <Loader size={20} className="animate-spin" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </button>
           </CardParent>
         </CardParent>
       </div>

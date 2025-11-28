@@ -45,13 +45,13 @@ export async function POST(req: NextRequest) {
 
   const absensi_pulang = await prisma.absensiPulang.create({
     data: {
-      approval: false,
       name: new Date(time_now as string),
       note: note as string,
       image: [result_image.secure_url, result_image.public_id],
       status: status as TypeStatus,
       approval_inbox_id: isInboxExist.id,
       nama_siswa: nama_siswa as string,
+      approval: null,
     },
     select: {
       id: true,
@@ -60,11 +60,34 @@ export async function POST(req: NextRequest) {
 
   const updateAbsensihari = await prisma.absensiHari.update({
     where: {
-      id: id_absensi_hari,
+      id: id_absensi_hari as string,
     },
     data: {
       absensi_pulang_id: absensi_pulang.id,
     },
+    select: {
+      id: true,
+    },
   });
   return NextResponse.json({ data: updateAbsensihari });
+}
+
+export async function PUT(req: NextRequest) {
+  const { approval, id } = await req.json();
+
+  const updated = await prisma.absensiPulang.update({
+    where: {
+      id: id,
+    },
+    data: {
+      approval: approval,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return NextResponse.json({
+    data: updated,
+  });
 }

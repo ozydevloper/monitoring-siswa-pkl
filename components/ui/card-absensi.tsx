@@ -4,12 +4,13 @@ import { IconInfo } from "./icon-status";
 import { Button } from "./button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./select";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  UseMutateAsyncFunction,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
-import { Loader } from "lucide-react";
-import { TypeStatus } from "@/app/generated/prisma/enums";
 import { useKirimAbsensi } from "@/lib/zustand";
-import { FormAbsensi } from "./form-absensi";
 
 export function CardAbsensiPulang({
   id_absensi_hari,
@@ -19,12 +20,11 @@ export function CardAbsensiPulang({
   nama_siswa: string | undefined;
 }) {
   const queryClient = useQueryClient();
-  const [status, setStatus] = useState<string>("PULANG");
-  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const status = "PULANG";
   const setMutateAbsensi = useKirimAbsensi((state) => state.setMutateAbsensi);
 
   const mutationAbsensiPulang = useMutation({
-    mutationFn: async (formData: FormData) =>
+    mutationFn: async (formData: FormData | undefined) =>
       apiFetch("/api/query/absensi_pulang", {
         method: "POST",
         body: formData,
@@ -39,12 +39,6 @@ export function CardAbsensiPulang({
     <CardParent
       className={`w-full flex flex-row items-center justify-between bg-yellow-50`}
     >
-      <FormAbsensi
-        id_absensi_hari={id_absensi_hari!}
-        nama_siswa={nama_siswa!}
-        status={status}
-      />
-
       <div className="flex items-center justify-center w-fit gap-x-1 h-full ">
         <IconInfo />
         <div className="border h-full"></div>
@@ -54,13 +48,19 @@ export function CardAbsensiPulang({
       </div>
       <div className="h-full flex items-center justify-between gap-x-1">
         <button
-          disabled={isSubmit}
-          onClick={() => {
-            setMutateAbsensi(mutationAbsensiPulang.mutateAsync);
-          }}
+          onClick={() =>
+            setMutateAbsensi({
+              formName: "Pulang",
+              id_absensi_hari: id_absensi_hari as string,
+              nama_siswa: nama_siswa as string,
+              status: status,
+              mutateAsyncFn:
+                mutationAbsensiPulang.mutateAsync as UseMutateAsyncFunction,
+            })
+          }
         >
           <Button color="red" className="text-[0.600rem]">
-            {isSubmit ? <Loader size={15} className="animate-spin" /> : status}
+            {status}
           </Button>
         </button>
       </div>
@@ -77,20 +77,13 @@ export default function CardAbsensiMasuk({
 }) {
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<string>("HADIR");
-  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const setMutateAbsensi = useKirimAbsensi((state) => state.setMutateAbsensi);
 
   const mutationAbsensiMasuk = useMutation({
-    mutationFn: () =>
+    mutationFn: async (formData: FormData | undefined) =>
       apiFetch("/api/query/absensi_masuk", {
         method: "POST",
-        body: JSON.stringify({
-          time_now: new Date(),
-          id_absensi_hari: id_absensi_hari,
-          note: "Benran note",
-          status: status,
-          image: ["image url", "public id"],
-          nama_siswa: nama_siswa,
-        }),
+        body: formData,
       }),
     onSettled: () =>
       queryClient.invalidateQueries({
@@ -111,14 +104,19 @@ export default function CardAbsensiMasuk({
       </div>
       <div className="h-full flex items-center justify-between gap-x-1">
         <button
-          disabled={isSubmit}
-          onClick={() => {
-            setIsSubmit(true);
-            mutationAbsensiMasuk.mutateAsync().then(() => setIsSubmit(false));
-          }}
+          onClick={() =>
+            setMutateAbsensi({
+              formName: "Masuk",
+              id_absensi_hari: id_absensi_hari as string,
+              nama_siswa: nama_siswa as string,
+              status: status,
+              mutateAsyncFn:
+                mutationAbsensiMasuk.mutateAsync as UseMutateAsyncFunction,
+            })
+          }
         >
           <Button color="green" className="text-[0.600rem]">
-            {isSubmit ? <Loader size={15} className="animate-spin" /> : status}
+            {status}
           </Button>
         </button>
         <Select onValueChange={(e) => setStatus(e)}>

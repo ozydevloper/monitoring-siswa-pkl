@@ -63,7 +63,7 @@ model AbsensiMasuk {
 
 nama_siswa String
   status         TypeStatus     @default(HADIR)
-  approval       Boolean
+  approval       Boolean?
   image          String[]
   note           String
   absensi_hari   AbsensiHari?
@@ -77,7 +77,7 @@ model AbsensiPulang {
   name DateTime
 nama_siswa String
   status                  TypeStatus    @default(HADIR)
-  approval                Boolean       @default(false)
+  approval                Boolean?       
   image                   String[]
   note                    String
   absensi_hari            AbsensiHari?

@@ -3,8 +3,22 @@ import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import { create } from "zustand";
 
 interface KirimAbsensi {
-  mutateAbsensi: UseMutateAsyncFunction | null;
-  setMutateAbsensi: (mutate: UseMutateAsyncFunction | null) => void;
+  mutateAbsensi: {
+    formName: string;
+    id_absensi_hari: string;
+    nama_siswa: string;
+    status: string;
+    mutateAsyncFn: UseMutateAsyncFunction;
+  } | null;
+  setMutateAbsensi: (
+    mutate: {
+      formName: string;
+      id_absensi_hari: string;
+      nama_siswa: string;
+      status: string;
+      mutateAsyncFn: UseMutateAsyncFunction;
+    } | null
+  ) => void;
 }
 
 interface DetailAbsensi {
@@ -26,7 +40,15 @@ interface DetailAbsensi {
 
 export const useKirimAbsensi = create<KirimAbsensi>((set) => ({
   mutateAbsensi: null,
-  setMutateAbsensi: (mutate: UseMutateAsyncFunction | null) =>
+  setMutateAbsensi: (
+    mutate: {
+      formName: string;
+      id_absensi_hari: string;
+      nama_siswa: string;
+      status: string;
+      mutateAsyncFn: UseMutateAsyncFunction;
+    } | null
+  ) =>
     set({
       mutateAbsensi: mutate,
     }),

@@ -1,7 +1,7 @@
 "use client";
 import { CardParent } from "@/components/ui/card";
-import { IconInfo, IconX } from "@/components/ui/icon-status";
-import { DoorOpen, Loader, LucideLoader } from "lucide-react";
+import { IconCheck, IconInfo, IconX } from "@/components/ui/icon-status";
+import { DoorOpen, Loader, LucideLoader, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -29,6 +29,8 @@ export default function Page() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [onCreate, setOnCreate] = useState<boolean>(false);
+  const [onRefreshAbsensiHari, setOnRefreshAbsensiHari] =
+    useState<boolean>(false);
 
   const getSiswa = useQuery<{
     data: Prisma.SiswaGetPayload<{
@@ -84,6 +86,7 @@ export default function Page() {
 
   return (
     <div className="w-full h-dvh flex items-center justify-center">
+      <FormAbsensi />
       <CardParent className="w-full h-dvh md:max-h-fit md:max-w-md gap-y-2 items-center">
         <CardParent className="flex-row items-center justify-between gap-x-3 w-full">
           <div className="flex flex-col w-full truncate ">
@@ -132,7 +135,15 @@ export default function Page() {
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1">
                 <div>Approval:</div>
-                <IconX size={15} />
+                {getAbsensiHari.data?.data?.absensi_masuk_relation?.approval ===
+                true ? (
+                  <IconCheck size={15} />
+                ) : getAbsensiHari.data?.data?.absensi_masuk_relation
+                    ?.approval === false ? (
+                  <IconX size={15} />
+                ) : (
+                  <IconInfo size={15} />
+                )}
               </div>
             </CardParent>
           </CardParent>
@@ -163,7 +174,15 @@ export default function Page() {
               <div className="flex w-full items-center text-center justify-start gap-x-1 ">
                 <div>Approval:</div>
                 <div>
-                  <IconX size={15} />
+                  {getAbsensiHari.data?.data?.absensipulang_relation
+                    ?.approval === true ? (
+                    <IconCheck size={15} />
+                  ) : getAbsensiHari.data?.data?.absensipulang_relation
+                      ?.approval === false ? (
+                    <IconX size={15} />
+                  ) : (
+                    <IconInfo size={15} />
+                  )}
                 </div>
               </div>
             </CardParent>
@@ -208,8 +227,24 @@ export default function Page() {
             </CardParent>
           </div>
           <div className="flex flex-col gap-y-1 w-full h-fit relative">
-            <Button color="blue" className="text-sm">
-              Absen hari ini
+            <Button
+              onClick={() => {
+                setOnRefreshAbsensiHari(true);
+                queryClient
+                  .invalidateQueries({
+                    queryKey: ["absensi_hari"],
+                  })
+                  .then(() => setOnRefreshAbsensiHari(false));
+              }}
+              color="blue"
+              className="text-sm text-center flex items-center justify-center flex-row gap-x-2"
+            >
+              Absen hari ini{" "}
+              <RefreshCcw
+                size={10}
+                strokeWidth={4}
+                className={onRefreshAbsensiHari ? "animate-spin" : ""}
+              />
             </Button>
           </div>
           {getAbsensiHari.data?.data?.absensi_masuk_id ||
