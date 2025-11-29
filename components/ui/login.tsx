@@ -4,7 +4,7 @@ import { CardParent } from "./card";
 import { Input } from "./input";
 import Image from "next/image";
 import { useState } from "react";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, Loader } from "lucide-react";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
@@ -18,6 +18,7 @@ export const Login = ({
   const [nameLogin, setNameLogin] = useState<string>("");
   const [passwordLogin, setPasswordLogin] = useState<string>("");
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+  const [onSubmit, setOnSubmit] = useState<boolean>(false);
   return (
     <div className="flex items-center justify-center w-full h-dvh">
       <CardParent className="w-full max-w-md h-full md:max-h-fit  ">
@@ -66,9 +67,7 @@ export const Login = ({
             </div>
             <div
               onClick={() => {
-                toast.loading("Redirect...", {
-                  description: "Tunggu sebentar...",
-                });
+                setOnSubmit(true);
                 signIn("credentials", {
                   namelogin: nameLogin,
                   passwordlogin: passwordLogin,
@@ -76,11 +75,15 @@ export const Login = ({
                   redirectTo: `${
                     namePage === "Siswa" ? "/siswa" : "/monitoring"
                   }`,
-                });
+                }).then(() => setOnSubmit(false));
               }}
-              className="p-3 rounded-md font-bold px-10 active:scale-97 transition-all ease-in-out duration-300 active:bg-green-500 active:text-green-100 bg-green-100 text-green-500 border border-green-200"
+              className="p-2 rounded-md font-bold px-10 active:scale-97 transition-all ease-in-out duration-300 active:bg-green-500 active:text-green-100 bg-green-100 text-green-500 border border-green-200 w-full flex items-center justify-center text-center"
             >
-              Masuk
+              {onSubmit ? (
+                <Loader size={20} className="animate-spin" />
+              ) : (
+                "Masuk"
+              )}
             </div>
             <div>
               login sebagai{" "}

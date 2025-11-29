@@ -8,7 +8,20 @@ export async function POST(req: NextRequest) {
       id: id,
     },
     include: {
-      absensi_hari: true,
+      absensi_hari: {
+        include: {
+          absensi_masuk_relation: {
+            include: {
+              absensi_hari: true,
+            },
+          },
+          absensipulang_relation: {
+            include: {
+              absensi_hari: true,
+            },
+          },
+        },
+      },
       guru_relation: true,
       tempat_pkl_relation: true,
     },

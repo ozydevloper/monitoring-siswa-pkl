@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./lib/db";
-import * as bcrypt from "bcrypt";
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: "/auth/error",
+  },
   providers: [
     Credentials({
       credentials: {
@@ -23,6 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const isGuru = await prisma.guru.findFirst({
             where: {
               name: nameLogin,
+              password: passwordLogin,
             },
             select: {
               id: true,
@@ -32,17 +35,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
           if (!isGuru || !isGuru.password) return null;
-          // const isMatched = await bcrypt.compare(
-          //   passwordLogin as string,
-          //   isGuru.password
-          // );
-          // if (!isMatched) return null;
 
           return isGuru;
         } else if (reqfrom === "Siswa") {
           const isMurid = await prisma.siswa.findFirst({
             where: {
               name: nameLogin,
+              password: passwordLogin,
             },
             select: {
               id: true,
@@ -52,11 +51,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
           if (!isMurid || !isMurid.password) return null;
-          const isMatched = await bcrypt.compare(
-            passwordLogin as string,
-            isMurid.password
-          );
-          if (!isMatched) return null;
 
           return isMurid;
         }
@@ -71,14 +65,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role; // <--- Data ditambahkan ke token JWT
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id; // <--- Data diambil dari token dan ditambahkan ke session.user
-        session.user.role = token.role; // <--- Data diambil dari token dan ditambahkan ke session.user
+        session.user.id = token.id;
+        session.user.role = token.role;
       }
       return session;
     },

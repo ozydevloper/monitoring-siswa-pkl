@@ -71,7 +71,9 @@ export const ItemInbox: React.FC<{
       className={`w-full h-fit flex flex-row gap-x-2 items-center justify-between  ${
         data.approval === true
           ? "bg-green-100"
-          : data.approval === false && "bg-red-100"
+          : data.approval === false
+          ? "bg-red-100"
+          : data.approval === null && "bg-yellow-100"
       } transition-all ease-in-out duration-200`}
     >
       <div
@@ -93,15 +95,9 @@ export const ItemInbox: React.FC<{
         <div className="text-[0.650rem] font-light text-muted-foreground whitespace-nowrap">
           {formatDate(new Date(data.name), true)}
         </div>
-        {data.status === "PULANG" ? (
-          <div className="text-[0.600rem] font-bold text-red-500">
-            {data.status}
-          </div>
-        ) : (
-          <div className="text-[0.600rem] font-bold text-green-500">
-            {data.status}
-          </div>
-        )}
+        <div className="text-[0.600rem] font-bold text-green-500">
+          {data.status}
+        </div>
       </div>
       <div className="border h-full"></div>
       <div className="w-fit flex flex-col items-end justify-end text-center gap-y-1">
@@ -123,6 +119,26 @@ export const ItemInbox: React.FC<{
             "Disapprove"
           )}
         </button>
+      </div>
+    </CardParent>
+  );
+};
+
+export const ItemInboxBelumAbsen = ({
+  name,
+  type,
+}: {
+  name: string;
+  type: string;
+}) => {
+  return (
+    <CardParent className="w-full text-muted-foreground bg-neutral-50">
+      <div className="font-bold ">{name}</div>
+      <div className="text-[0.650rem] font-light text-muted-foreground whitespace-nowrap">
+        {formatDate(new Date())}
+      </div>
+      <div className="text-[0.600rem] font-bold text-red-500 ">
+        Belum absen {type}
       </div>
     </CardParent>
   );

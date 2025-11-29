@@ -8,9 +8,6 @@ const adapter = new PrismaPg({ connectionString });
 export const prisma = new PrismaClient({
   adapter,
   omit: {
-    siswa: {
-      password: true,
-    },
     guru: {
       password: true,
     },

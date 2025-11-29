@@ -31,11 +31,25 @@ export default function Page() {
   const [onCreate, setOnCreate] = useState<boolean>(false);
   const [onRefreshAbsensiHari, setOnRefreshAbsensiHari] =
     useState<boolean>(false);
+  const [onRefreshGetSiswa, setOnRefreshGetSiswa] = useState<boolean>(false);
 
   const getSiswa = useQuery<{
     data: Prisma.SiswaGetPayload<{
       include: {
-        absensi_hari: true;
+        absensi_hari: {
+          include: {
+            absensi_masuk_relation: {
+              include: {
+                absensi_hari: true;
+              };
+            };
+            absensipulang_relation: {
+              include: {
+                absensi_hari: true;
+              };
+            };
+          };
+        };
         guru_relation: true;
         tempat_pkl_relation: true;
       };
@@ -94,7 +108,7 @@ export default function Page() {
               {session?.user?.name ?? "Nama Siswa"}
             </p>
             <p className="text-xs font-light text-muted-foreground">
-              {getSiswa.data?.data.tempat_pkl_relation.name ?? "Tempat PKL"}
+              {getSiswa.data?.data?.tempat_pkl_relation?.name ?? "Tempat PKL"}
             </p>
             <p className="text-[0.650rem] font-bold text-muted-foreground ">
               {getSiswa.data?.data.guru_relation.name ?? "Nama Guru Monitoring"}
@@ -123,7 +137,7 @@ export default function Page() {
               <div className="flex w-full items-center text-center justify-start gap-x-1">
                 <div>Jam Masuk:</div>
                 <div className="font-bold">
-                  {getSiswa.data?.data.tempat_pkl_relation.jam_masuk ?? "-"}
+                  {getSiswa.data?.data?.tempat_pkl_relation?.jam_masuk ?? "-"}
                 </div>
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1">
@@ -161,7 +175,7 @@ export default function Page() {
               <div className="flex w-full items-center text-center justify-start gap-x-1">
                 <div>Jam Pulang:</div>
                 <div className="font-bold">
-                  {getSiswa.data?.data.tempat_pkl_relation.jam_pulang ?? "-"}
+                  {getSiswa.data?.data?.tempat_pkl_relation?.jam_pulang ?? "-"}
                 </div>
               </div>
               <div className="flex w-full items-center text-center justify-start gap-x-1">
@@ -274,11 +288,22 @@ export default function Page() {
           )}
         </div>
         <div className="border w-xs md:w-sm"></div>
-        <CardParent className="bg-blue-50 w-full max-w-md">
-          <div className="w-full items-center justify-center text-center font-bold text-muted-foreground">
-            History Absensi
+        <CardParent className="bg-yellow-100  w-full max-w-md h-64 gap-y-1">
+          <div
+            onClick={() => {
+              setOnRefreshGetSiswa(true);
+              getSiswa.refetch().then(() => setOnRefreshGetSiswa(false));
+            }}
+            className="w-full items-center justify-center text-center font-bold flex gap-2 text-yellow-500"
+          >
+            History Absensi{" "}
+            <RefreshCcw
+              size={10}
+              strokeWidth={4}
+              className={onRefreshGetSiswa ? "animate-spin" : ""}
+            />
           </div>
-          <CardParent className="bg-background h-28 overflow-auto">
+          <CardParent className="bg-background overflow-auto h-full">
             {getSiswa.isLoading ? (
               <div className="w-full h-full flex items-center justify-center text-center">
                 <Loader className="animate-spin" />
@@ -286,9 +311,9 @@ export default function Page() {
             ) : getSiswa.error ? (
               <div>{JSON.stringify(getSiswa.error)}</div>
             ) : (
-              getSiswa.data?.data.absensi_hari.map((e, i) => (
-                <CardHistoryAbsensiHari key={i} data={e as AbsensiHari} />
-              ))
+              getSiswa.data?.data.absensi_hari.map((e, i) => {
+                return <CardHistoryAbsensiHari key={i} data={e} />;
+              })
             )}
           </CardParent>
         </CardParent>

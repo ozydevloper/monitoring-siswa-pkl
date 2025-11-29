@@ -44,4 +44,7 @@ export default auth(async (request: NextAuthRequest) => {
   ) {
     return NextResponse.redirect(new URL("/siswa", request.url));
   }
+  if (request.nextUrl.pathname.startsWith("/auth/error") && request.auth) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 });

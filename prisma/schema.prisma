@@ -25,14 +25,14 @@ model Siswa {
   id            String @unique @default(uuid())
   name          String @unique
   password      String
-  tempat_pkl_id String
+  tempat_pkl_id String?
   guru_id       String
   role          String @default("SISWA")
 
   absensi_hari AbsensiHari[]
 
   guru_relation       Guru      @relation(fields: [guru_id], references: [id])
-  tempat_pkl_relation TempatPKL @relation(fields: [tempat_pkl_id], references: [id])
+  tempat_pkl_relation TempatPKL? @relation(fields: [tempat_pkl_id], references: [id])
 }
 
 model TempatPKL {
@@ -51,10 +51,10 @@ model AbsensiHari {
   absensi_masuk_id  String?  @unique
   absensi_pulang_id String?  @unique
 
-  absensi_masuk_relation AbsensiMasuk?  @relation(fields: [absensi_masuk_id], references: [id])
-  absensipulang_relation AbsensiPulang? @relation(fields: [absensi_pulang_id], references: [id])
+  absensi_masuk_relation AbsensiMasuk?  @relation(fields: [absensi_masuk_id], references: [id], onDelete: Cascade)
+  absensipulang_relation AbsensiPulang? @relation(fields: [absensi_pulang_id], references: [id], onDelete: Cascade)
 
-  siswa_relation Siswa @relation(fields: [siswa_id], references: [id])
+  siswa_relation Siswa @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
 }
 
 model AbsensiMasuk {
@@ -67,7 +67,7 @@ nama_siswa String
   image          String[]
   note           String
   absensi_hari   AbsensiHari?
-  approval_inbox ApprovalInbox? @relation(fields: [approvalInboxId], references: [id])
+  approval_inbox ApprovalInbox? @relation(fields: [approvalInboxId], references: [id], onDelete: Cascade)
 
   approvalInboxId String?
 }
@@ -81,7 +81,7 @@ nama_siswa String
   image                   String[]
   note                    String
   absensi_hari            AbsensiHari?
-  approval_inbox_relation ApprovalInbox? @relation(fields: [approval_inbox_id], references: [id])
+  approval_inbox_relation ApprovalInbox? @relation(fields: [approval_inbox_id], references: [id], onDelete: Cascade)
 
   approval_inbox_id String?
 }
