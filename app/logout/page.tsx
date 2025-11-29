@@ -1,10 +1,8 @@
 "use client";
-import { signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { CardParent } from "@/components/ui/card";
 import { logout } from "@/lib/actionLogin";
 import { redirect } from "next/navigation";
-import { toast } from "sonner";
 
 export default function Page() {
   return (

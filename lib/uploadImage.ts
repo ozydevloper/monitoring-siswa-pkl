@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import "dotenv/config";
 
 cloudinary.config({
@@ -7,7 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function UploadImage(image: File) {
+export async function UploadImage(image: File): Promise<UploadApiResponse> {
   const fileImage = image;
   const bytes = await fileImage.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -24,5 +24,5 @@ export async function UploadImage(image: File) {
     );
     stream.end(buffer);
   });
-  return result;
+  return result as UploadApiResponse;
 }

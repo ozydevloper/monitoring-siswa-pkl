@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/db";
 import { getHariIni } from "@/lib/getDatetime";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const filterTanggal = getHariIni();
 
   const inboxItem = await prisma.approvalInbox.findFirst({

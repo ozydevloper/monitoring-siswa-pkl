@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const { name, jam_masuk, jam_pulang } = await req.json();
 
   try {
-    const tempat_pkl = await prisma.tempatPKL.create({
+    await prisma.tempatPKL.create({
       data: {
         name: name,
         jam_masuk: jam_masuk,
@@ -35,7 +35,7 @@ export async function PUT(req: NextRequest) {
   const { id_tempat_pkl, update_jam_masuk, update_jam_pulang, update_name } =
     await req.json();
   try {
-    const tempat_pkl = await prisma.tempatPKL.update({
+    await prisma.tempatPKL.update({
       where: {
         id: id_tempat_pkl,
       },

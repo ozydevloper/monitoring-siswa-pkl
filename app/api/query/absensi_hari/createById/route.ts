@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
   const filterTanggal = getHariIni();
 
-  const absesnsi_hari = await prisma.absensiHari.create({
+  await prisma.absensiHari.create({
     data: {
       siswa_id: id,
       name: filterTanggal.gt,

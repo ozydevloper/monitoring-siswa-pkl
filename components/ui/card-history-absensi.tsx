@@ -1,15 +1,12 @@
 import { formatDate } from "@/lib/formatDate";
 import { CardParent } from "./card";
-import { IconCheck, IconInfo } from "./icon-status";
+import { IconCheck } from "./icon-status";
 import {
-  AbsensiHari,
   AbsensiMasuk,
   AbsensiPulang,
   Prisma,
 } from "@/app/generated/prisma/client";
 import { useDetailAbsensi } from "@/lib/zustand";
-import { Button } from "./button";
-import { Loader } from "lucide-react";
 import { useState } from "react";
 import { ClassNameValue } from "tailwind-merge";
 
@@ -114,9 +111,6 @@ export const CardHistoryAbsensiHari: React.FC<{
   }>;
 }> = ({ data }) => {
   const [isShow, setIsShow] = useState<boolean>(false);
-  const setDataDetailAbsensi = useDetailAbsensi(
-    (state) => state.setDataDetailAbsensi
-  );
   return (
     <div>
       <CardParent className=" flex items-center  justify-between gap-x-2  text-center font-bold text-muted-foreground gap-y-1 bg-yellow-50">

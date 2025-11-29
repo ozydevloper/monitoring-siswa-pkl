@@ -5,7 +5,6 @@ import { Input } from "./input";
 import Image from "next/image";
 import { useState } from "react";
 import { Eye, EyeClosed, Loader } from "lucide-react";
-import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
 export const Login = ({

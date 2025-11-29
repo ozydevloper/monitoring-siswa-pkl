@@ -13,9 +13,6 @@ export async function POST(req: NextRequest) {
   const status = formData.get("status");
   const nama_siswa = formData.get("nama_siswa");
 
-  // const { time_now, id_absensi_hari, note, status, image, nama_siswa } =
-  //   await req.json();
-
   const filterDate = getHariIni();
 
   let isInboxExist = await prisma.approvalInbox.findFirst({

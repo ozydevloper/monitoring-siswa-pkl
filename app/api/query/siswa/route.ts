@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const { newName, newPassword, guru_id, tempat_pkl_id } = await req.json();
 
   try {
-    const newSiswaCreated = await prisma.siswa.create({
+    await prisma.siswa.create({
       data: {
         name: newName,
         password: newPassword,
@@ -44,7 +44,7 @@ export async function PUT(req: NextRequest) {
   } = await req.json();
 
   try {
-    const updatedSiswa = await prisma.siswa.update({
+    await prisma.siswa.update({
       where: {
         id: update_id_siswa,
       },

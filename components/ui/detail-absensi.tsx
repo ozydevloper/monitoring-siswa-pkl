@@ -4,7 +4,6 @@ import { Button } from "./button";
 import { ArrowUp } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
 import { IconCheck, IconX } from "./icon-status";
-import { Textarea } from "./textarea";
 import { useDetailAbsensi } from "@/lib/zustand";
 
 export const DetailAbsensi = () => {
