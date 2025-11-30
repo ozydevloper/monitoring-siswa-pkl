@@ -33,7 +33,7 @@ export const FormAbsensi = () => {
 
   return (
     <div
-      className={`h-dvh inset-0 bg-black/50 absolute z-100 p-2 flex items-center justify-center  transition-all ease-in-out duration-200 ${
+      className={`h-dvh inset-0 bg-black/50 fixed z-100 p-2 flex items-center justify-center  transition-all ease-in-out duration-200 ${
         mutateAbsensi ? "translate-y-0" : "-translate-y-full"
       }`}
     >
