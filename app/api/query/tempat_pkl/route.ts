@@ -67,6 +67,6 @@ export async function DELETE(req: NextRequest) {
     },
   });
   return NextResponse.json({
-    data: `Berhasil Update,${deletedTempatPKL.name}`,
+    data: `Berhasil delete,${deletedTempatPKL.name}`,
   });
 }

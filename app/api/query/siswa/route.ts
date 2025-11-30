@@ -79,5 +79,5 @@ export async function DELETE(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ data: `Berhasil update, ${deletedSiswa.name}` });
+  return NextResponse.json({ data: `Berhasil delete, ${deletedSiswa.name}` });
 }

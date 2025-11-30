@@ -274,62 +274,67 @@ export const TabelTempatPKL = () => {
           >
             <ArrowUp size={15} />
           </Button>
-          <CardParent className="bg-yellow-50 gap-y-1">
-            <div className="font-bold text-base">Tambah Tempat PKL</div>
-            <CardParent className="gap-y-1">
-              <Input
-                onChange={(e) => setNewName(e.target.value)}
-                type="text"
-                placeholder="Nama tempat PKL"
-                className="bg-background"
-              />
-              <Input
-                onChange={(e) => setJamMasuk(e.target.value)}
-                type="text"
-                placeholder="Jam masuk"
-                className="bg-background"
-              />
-              <Input
-                onChange={(e) => setJamPulang(e.target.value)}
-                type="text"
-                placeholder="Jam pulang"
-                className="bg-background"
-              />
-              <button
-                disabled={onSubmit}
-                className="w-full"
-                onClick={() => {
-                  setOnSubmit(true);
+          {isCreate && (
+            <CardParent className="bg-yellow-50 gap-y-1">
+              <div className="font-bold text-base">Tambah Tempat PKL</div>
+              <CardParent className="gap-y-1">
+                <Input
+                  onChange={(e) => setNewName(e.target.value)}
+                  type="text"
+                  placeholder="Nama tempat PKL"
+                  className="bg-background"
+                />
+                <Input
+                  onChange={(e) => setJamMasuk(e.target.value)}
+                  type="text"
+                  placeholder="Jam masuk"
+                  className="bg-background"
+                />
+                <Input
+                  onChange={(e) => setJamPulang(e.target.value)}
+                  type="text"
+                  placeholder="Jam pulang"
+                  className="bg-background"
+                />
+                <button
+                  disabled={onSubmit}
+                  className="w-full"
+                  onClick={() => {
+                    setOnSubmit(true);
 
-                  if (newName === "" || jamMasuk === "" || jamPulang === "") {
-                    setOnSubmit(false);
+                    if (newName === "" || jamMasuk === "" || jamPulang === "") {
+                      setOnSubmit(false);
 
-                    return setErrorInput(true);
-                  } else {
-                    setErrorInput(false);
-                  }
-                  mutationNewTempatPKL
-                    .mutateAsync({
-                      name: newName,
-                      jam_masuk: jamMasuk,
-                      jam_pulang: jamPulang,
-                    })
-                    .then(() => setOnSubmit(false));
-                }}
-              >
-                <Button
-                  color={errorInput ? "red" : "green"}
-                  className="text-center w-full flex items-center jusitfy-center"
+                      return setErrorInput(true);
+                    } else {
+                      setErrorInput(false);
+                    }
+                    mutationNewTempatPKL
+                      .mutateAsync({
+                        name: newName,
+                        jam_masuk: jamMasuk,
+                        jam_pulang: jamPulang,
+                      })
+                      .then(() => {
+                        setOnSubmit(false);
+                        setIsCreate(false);
+                      });
+                  }}
                 >
-                  {onSubmit ? (
-                    <Loader size={20} className="animate-spin" />
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
-              </button>
+                  <Button
+                    color={errorInput ? "red" : "green"}
+                    className="text-center w-full flex items-center jusitfy-center"
+                  >
+                    {onSubmit ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      "Submit"
+                    )}
+                  </Button>
+                </button>
+              </CardParent>
             </CardParent>
-          </CardParent>
+          )}
         </CardParent>
       </div>
 
