@@ -4,11 +4,7 @@ import { IconInfo } from "./icon-status";
 import { Button } from "./button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./select";
 import { useState } from "react";
-import {
-  UseMutateAsyncFunction,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
 import { useKirimAbsensi } from "@/lib/zustand";
 
@@ -29,10 +25,14 @@ export function CardAbsensiPulang({
         method: "POST",
         body: formData,
       }),
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["absensi_hari"],
-      }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getSiswa"],
+      });
+    },
   });
 
   return (
@@ -54,8 +54,8 @@ export function CardAbsensiPulang({
               id_absensi_hari: id_absensi_hari as string,
               nama_siswa: nama_siswa as string,
               status: status,
-              mutateAsyncFn:
-                mutationAbsensiPulang.mutateAsync as UseMutateAsyncFunction,
+              mutateAsyncFn: (formData: FormData) =>
+                mutationAbsensiPulang.mutateAsync(formData),
             })
           }
         >
@@ -85,10 +85,14 @@ export default function CardAbsensiMasuk({
         method: "POST",
         body: formData,
       }),
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["absensi_hari"],
-      }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getSiswa"],
+      });
+    },
   });
 
   return (
@@ -110,8 +114,8 @@ export default function CardAbsensiMasuk({
               id_absensi_hari: id_absensi_hari as string,
               nama_siswa: nama_siswa as string,
               status: status,
-              mutateAsyncFn:
-                mutationAbsensiMasuk.mutateAsync as UseMutateAsyncFunction,
+              mutateAsyncFn: (formData: FormData) =>
+                mutationAbsensiMasuk.mutateAsync(formData),
             })
           }
         >

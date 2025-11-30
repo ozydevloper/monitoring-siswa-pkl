@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
+
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./lib/db";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/auth/error",
@@ -35,8 +37,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
           if (!isGuru || !isGuru.password) return null;
+          if (isGuru.role !== "GURU") {
+            return null;
+          }
 
-          return isGuru;
+          return {
+            role: isGuru.role as "GURU",
+            name: isGuru.name,
+            id: isGuru.id,
+          };
         } else if (reqfrom === "Siswa") {
           const isMurid = await prisma.siswa.findFirst({
             where: {
@@ -51,8 +60,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
           if (!isMurid || !isMurid.password) return null;
-
-          return isMurid;
+          if (isMurid.role !== "SISWA") {
+            return null;
+          }
+          return {
+            role: isMurid.role as "SISWA",
+            name: isMurid.name,
+            id: isMurid.id,
+          };
         }
         return null;
       },
@@ -71,8 +86,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id;
-        session.user.role = token.role;
+        session.user.id = token.id as string;
+        session.user.role = token.role as "GURU" | "SISWA";
       }
       return session;
     },

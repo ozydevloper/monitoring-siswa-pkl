@@ -8,7 +8,7 @@ interface KirimAbsensi {
     id_absensi_hari: string;
     nama_siswa: string;
     status: string;
-    mutateAsyncFn: UseMutateAsyncFunction;
+    mutateAsyncFn: (formdata: FormData) => Promise<Response>;
   } | null;
   setMutateAbsensi: (
     mutate: {
@@ -16,7 +16,7 @@ interface KirimAbsensi {
       id_absensi_hari: string;
       nama_siswa: string;
       status: string;
-      mutateAsyncFn: UseMutateAsyncFunction;
+      mutateAsyncFn: (formdata: FormData) => Promise<Response>;
     } | null
   ) => void;
 }
@@ -46,7 +46,7 @@ export const useKirimAbsensi = create<KirimAbsensi>((set) => ({
       id_absensi_hari: string;
       nama_siswa: string;
       status: string;
-      mutateAsyncFn: UseMutateAsyncFunction;
+      mutateAsyncFn: (formdata: FormData) => Promise<Response>;
     } | null
   ) =>
     set({

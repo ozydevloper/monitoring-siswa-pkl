@@ -90,15 +90,20 @@ export default function Page() {
         method: "POST",
         body: JSON.stringify({ id: session?.user?.id }),
       }).then((e) => e.json()),
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["absensi_hari"],
-      }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getSiswa"],
+      });
+    },
   });
 
   return (
     <div className="w-full h-dvh flex items-center justify-center">
       <FormAbsensi />
+
       <CardParent className="w-full h-dvh md:max-h-fit md:max-w-md gap-y-2 items-center">
         <CardParent className="flex-row items-center justify-between gap-x-3 w-full">
           <div className="flex flex-col w-full truncate ">

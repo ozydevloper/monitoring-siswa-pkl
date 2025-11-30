@@ -17,14 +17,6 @@ export const FormAbsensi = () => {
   const setMutateAbsensi = useKirimAbsensi((state) => state.setMutateAbsensi);
 
   const handleSubmit = () => {
-    // {
-    //         time_now: new Date(),
-    //         id_absensi_hari: id_absensi_hari,
-    //         note: "Benran note",
-    //         status: status,
-    //         image: ["image url", "public id"],
-    //         nama_siswa: nama_siswa,
-    //       }
     const formData = new FormData();
     formData.append("time_now", new Date().toISOString());
     formData.append("id_absensi_hari", mutateAbsensi!.id_absensi_hari);
