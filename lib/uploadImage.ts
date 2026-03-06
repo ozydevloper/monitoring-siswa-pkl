@@ -20,7 +20,7 @@ export async function UploadImage(image: File): Promise<UploadApiResponse> {
       (error, result) => {
         if (error) reject(error);
         else resolve(result);
-      }
+      },
     );
     stream.end(buffer);
   });
