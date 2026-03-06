@@ -1,5 +1,6 @@
+"use server";
 import { signOut } from "@/auth";
 
-export function logout() {
+export async function logout() {
   return signOut({ redirectTo: "/login/siswa" });
 }
