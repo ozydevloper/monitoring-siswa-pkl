@@ -11,7 +11,9 @@ export default auth(async (request: NextAuthRequest) => {
 
   if (
     (request.nextUrl.pathname === "/" ||
-      request.nextUrl.pathname.startsWith("/logout")) &&
+      request.nextUrl.pathname.startsWith("/logout") ||
+      request.nextUrl.pathname.startsWith("/siswa") ||
+      request.nextUrl.pathname.startsWith("/monitoring")) &&
     !request.auth
   ) {
     return NextResponse.redirect(new URL("/login/siswa", request.url));
