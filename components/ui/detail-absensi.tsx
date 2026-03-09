@@ -110,6 +110,7 @@ export const DetailAbsensi = () => {
                     setOnUpdate(true);
                     mutateUpdateImage.mutateAsync(formData).then((e) => {
                       setOnUpdate(false);
+                      setNewImage(null);
                       setDataDetailAbsensi(null);
                     });
                   }}
