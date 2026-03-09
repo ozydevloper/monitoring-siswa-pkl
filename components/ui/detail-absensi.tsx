@@ -5,6 +5,7 @@ import { ArrowUp } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
 import { IconCheck, IconX } from "./icon-status";
 import { useDetailAbsensi } from "@/lib/zustand";
+import { useState } from "react";
 
 export const DetailAbsensi = () => {
   const dataDetailAbsensi = useDetailAbsensi(
@@ -13,6 +14,7 @@ export const DetailAbsensi = () => {
   const setDataDetailAbsensi = useDetailAbsensi(
     (state) => state.setDataDetailAbsensi,
   );
+  const [newImage, setNewImage] = useState<null | FileList>(null);
   return (
     <div
       className={`inset-0 h-dvh bg-black/50 fixed z-100 flex flex-col justify-center items-center gap-y-1 ${
@@ -67,10 +69,16 @@ export const DetailAbsensi = () => {
               </p>
             </CardParent>
             <CardParent>
-              <input type="file" accept="image/*" />
-              <Button onClick={() => alert("hello world")} color="green">
-                Ubah Gambar
-              </Button>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setNewImage(e.target.files)}
+              />
+              {newImage && (
+                <Button color="green" onClick={() => console.log(newImage)}>
+                  Ubah Gambar
+                </Button>
+              )}
             </CardParent>
           </CardParent>
         </CardParent>
