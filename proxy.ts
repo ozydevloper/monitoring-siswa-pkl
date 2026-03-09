@@ -10,21 +10,14 @@ export default auth(async (request: NextAuthRequest) => {
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/siswa") ||
-    request.nextUrl.pathname.startsWith("/monitoring")
+    (request.nextUrl.pathname === "/" ||
+      request.nextUrl.pathname.startsWith("/logout")) &&
+    !request.auth
   ) {
     return NextResponse.redirect(new URL("/login/siswa", request.url));
   }
 
-  if (request.nextUrl.pathname === "/" && !request.auth) {
-    return NextResponse.redirect(new URL("/login/siswa", request.url));
-  }
-
-  if (request.nextUrl.pathname === "/" && request.auth?.user?.role === "GURU") {
-    return NextResponse.redirect(new URL("/monitoring", request.url));
-  }
-
-  if (request.nextUrl.pathname.startsWith("/logout") && !request.auth) {
+  if (request.nextUrl.pathname.startsWith("/login") && request.auth) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -34,9 +27,8 @@ export default auth(async (request: NextAuthRequest) => {
   ) {
     return NextResponse.redirect(new URL("/siswa", request.url));
   }
-
-  if (request.nextUrl.pathname.startsWith("/login") && request.auth) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (request.nextUrl.pathname === "/" && request.auth?.user?.role === "GURU") {
+    return NextResponse.redirect(new URL("/monitoring", request.url));
   }
 
   if (
