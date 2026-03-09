@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { CardParent } from "./card";
 import { Button } from "./button";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Loader } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
 import { IconCheck, IconX } from "./icon-status";
 import { useDetailAbsensi } from "@/lib/zustand";
@@ -18,6 +18,7 @@ export const DetailAbsensi = () => {
     (state) => state.setDataDetailAbsensi,
   );
   const [newImage, setNewImage] = useState<null | FileList>(null);
+  const [onUpdate, setOnUpdate] = useState<boolean>(false);
 
   const mutateUpdateImage = useMutation({
     mutationFn: async (data: FormData) =>
@@ -106,9 +107,18 @@ export const DetailAbsensi = () => {
 
                     formData.append("type", dataDetailAbsensi.type);
                     formData.append("id", dataDetailAbsensi.dataDetail.id);
+                    setOnUpdate(true);
+                    mutateUpdateImage.mutateAsync(formData).then((e) => {
+                      setOnUpdate(false);
+                      setDataDetailAbsensi(null);
+                    });
                   }}
                 >
-                  Ubah Gambar
+                  {onUpdate ? (
+                    <Loader size={14} className="animate-spin" />
+                  ) : (
+                    "Ubah Gambar"
+                  )}
                 </Button>
               )}
             </CardParent>
