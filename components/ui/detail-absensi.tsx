@@ -8,6 +8,7 @@ import { IconCheck, IconX } from "./icon-status";
 import { useDetailAbsensi } from "@/lib/zustand";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/signature";
 
 export const DetailAbsensi = () => {
   const dataDetailAbsensi = useDetailAbsensi(
@@ -19,7 +20,11 @@ export const DetailAbsensi = () => {
   const [newImage, setNewImage] = useState<null | FileList>(null);
 
   const mutateUpdateImage = useMutation({
-    mutationFn: async (data: FormData) => {},
+    mutationFn: async (data: FormData) =>
+      apiFetch("/api/query/siswa/updateGambar", {
+        method: "POST",
+        body: data,
+      }).then((e) => e.json()),
   });
 
   return (
@@ -85,7 +90,13 @@ export const DetailAbsensi = () => {
                 onChange={(e) => setNewImage(e.target.files)}
               />
               {newImage && (
-                <Button color="green" onClick={() => console.log(newImage)}>
+                <Button
+                  color="green"
+                  onClick={() => {
+                    const formData = new FormData();
+                    console.log(dataDetailAbsensi);
+                  }}
+                >
                   Ubah Gambar
                 </Button>
               )}

@@ -26,3 +26,14 @@ export async function UploadImage(image: File): Promise<UploadApiResponse> {
   });
   return result as UploadApiResponse;
 }
+
+export async function DeleteImage(
+  public_id: string,
+): Promise<{ success: boolean }> {
+  try {
+    const result = await cloudinary.uploader.destroy(public_id);
+    return { success: true };
+  } catch {
+    return { success: false };
+  }
+}
