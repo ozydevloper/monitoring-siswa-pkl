@@ -9,7 +9,14 @@ export default auth(async (request: NextAuthRequest) => {
     NextResponse.next();
   }
 
-  if (request.nextUrl.pathname.startsWith("/") && !request.auth) {
+  if (
+    request.nextUrl.pathname.startsWith("/siswa") ||
+    request.nextUrl.pathname.startsWith("/monitoring")
+  ) {
+    return NextResponse.redirect(new URL("/login/siswa", request.url));
+  }
+
+  if (request.nextUrl.pathname === "/" && !request.auth) {
     return NextResponse.redirect(new URL("/login/siswa", request.url));
   }
 
