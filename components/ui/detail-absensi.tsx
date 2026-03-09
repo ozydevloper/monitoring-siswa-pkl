@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { CardParent } from "./card";
 import { Button } from "./button";
@@ -6,6 +7,7 @@ import { formatDate } from "@/lib/formatDate";
 import { IconCheck, IconX } from "./icon-status";
 import { useDetailAbsensi } from "@/lib/zustand";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 export const DetailAbsensi = () => {
   const dataDetailAbsensi = useDetailAbsensi(
@@ -15,6 +17,11 @@ export const DetailAbsensi = () => {
     (state) => state.setDataDetailAbsensi,
   );
   const [newImage, setNewImage] = useState<null | FileList>(null);
+
+  const mutateUpdateImage = useMutation({
+    mutationFn: async (data: FormData) => {},
+  });
+
   return (
     <div
       className={`inset-0 h-dvh bg-black/50 fixed z-100 flex flex-col justify-center items-center gap-y-1 ${
@@ -22,7 +29,10 @@ export const DetailAbsensi = () => {
       } transition-all ease-in-out duration-200`}
     >
       <Button
-        onClick={() => setDataDetailAbsensi(null)}
+        onClick={() => {
+          setDataDetailAbsensi(null);
+          setNewImage(null);
+        }}
         className="w-full md:max-w-xl text-center flex items-center justify-center"
         color="blue"
       >
