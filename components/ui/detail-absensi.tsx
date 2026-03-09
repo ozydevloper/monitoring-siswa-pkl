@@ -9,8 +9,10 @@ import { useDetailAbsensi } from "@/lib/zustand";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/signature";
+import { useSession } from "next-auth/react";
 
 export const DetailAbsensi = () => {
+  const session = useSession();
   const dataDetailAbsensi = useDetailAbsensi(
     (state) => state.dataDetailAbsensi,
   );
@@ -84,45 +86,47 @@ export const DetailAbsensi = () => {
                 {dataDetailAbsensi.dataDetail.note}
               </p>
             </CardParent>
-            <CardParent>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setNewImage(e.target.files)}
-              />
-              {newImage && (
-                <Button
-                  color="green"
-                  onClick={() => {
-                    if (newImage === null) return;
+            {session && session.data?.user?.role === "SISWA" && (
+              <CardParent>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setNewImage(e.target.files)}
+                />
+                {newImage && (
+                  <Button
+                    color="green"
+                    onClick={() => {
+                      if (newImage === null) return;
 
-                    const formData = new FormData();
+                      const formData = new FormData();
 
-                    formData.append("new_image", newImage[0]);
+                      formData.append("new_image", newImage[0]);
 
-                    formData.append(
-                      "old_public_id",
-                      dataDetailAbsensi.dataDetail.image[1],
-                    );
+                      formData.append(
+                        "old_public_id",
+                        dataDetailAbsensi.dataDetail.image[1],
+                      );
 
-                    formData.append("type", dataDetailAbsensi.type);
-                    formData.append("id", dataDetailAbsensi.dataDetail.id);
-                    setOnUpdate(true);
-                    mutateUpdateImage.mutateAsync(formData).then((e) => {
-                      setOnUpdate(false);
-                      setNewImage(null);
-                      setDataDetailAbsensi(null);
-                    });
-                  }}
-                >
-                  {onUpdate ? (
-                    <Loader size={14} className="animate-spin" />
-                  ) : (
-                    "Ubah Gambar"
-                  )}
-                </Button>
-              )}
-            </CardParent>
+                      formData.append("type", dataDetailAbsensi.type);
+                      formData.append("id", dataDetailAbsensi.dataDetail.id);
+                      setOnUpdate(true);
+                      mutateUpdateImage.mutateAsync(formData).then((e) => {
+                        setOnUpdate(false);
+                        setNewImage(null);
+                        setDataDetailAbsensi(null);
+                      });
+                    }}
+                  >
+                    {onUpdate ? (
+                      <Loader size={14} className="animate-spin" />
+                    ) : (
+                      "Ubah Gambar"
+                    )}
+                  </Button>
+                )}
+              </CardParent>
+            )}
           </CardParent>
         </CardParent>
       )}
