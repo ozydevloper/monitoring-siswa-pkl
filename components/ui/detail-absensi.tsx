@@ -93,8 +93,19 @@ export const DetailAbsensi = () => {
                 <Button
                   color="green"
                   onClick={() => {
+                    if (newImage === null) return;
+
                     const formData = new FormData();
-                    console.log(dataDetailAbsensi);
+
+                    formData.append("new_image", newImage[0]);
+
+                    formData.append(
+                      "old_public_id",
+                      dataDetailAbsensi.dataDetail.image[1],
+                    );
+
+                    formData.append("type", dataDetailAbsensi.type);
+                    formData.append("id", dataDetailAbsensi.dataDetail.id);
                   }}
                 >
                   Ubah Gambar
