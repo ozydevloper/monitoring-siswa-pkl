@@ -67,8 +67,10 @@ export const DetailAbsensi = () => {
               </p>
             </CardParent>
             <CardParent>
-              update gambar
               <input type="file" accept="image/*" />
+              <Button onClick={() => alert("hello world")} color="green">
+                Ubah Gambar
+              </Button>
             </CardParent>
           </CardParent>
         </CardParent>
