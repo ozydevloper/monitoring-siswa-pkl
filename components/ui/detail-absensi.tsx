@@ -8,10 +8,10 @@ import { useDetailAbsensi } from "@/lib/zustand";
 
 export const DetailAbsensi = () => {
   const dataDetailAbsensi = useDetailAbsensi(
-    (state) => state.dataDetailAbsensi
+    (state) => state.dataDetailAbsensi,
   );
   const setDataDetailAbsensi = useDetailAbsensi(
-    (state) => state.setDataDetailAbsensi
+    (state) => state.setDataDetailAbsensi,
   );
   return (
     <div
@@ -65,6 +65,10 @@ export const DetailAbsensi = () => {
               <p className="whitespace-pre-line">
                 {dataDetailAbsensi.dataDetail.note}
               </p>
+            </CardParent>
+            <CardParent>
+              update gambar
+              <input type="file" accept="image/*" />
             </CardParent>
           </CardParent>
         </CardParent>

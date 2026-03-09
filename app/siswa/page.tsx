@@ -121,7 +121,7 @@ export default function Page() {
 
           <div
             onClick={() => redirect("/logout")}
-            className="font-bold text-xl text-muted-foreground bg-red-100 flex items-center justify-center text-center rounded-md p-1.5 border-2 border-red-200"
+            className="font-bold text-xl text-muted-foreground bg-red-100 flex items-center justify-center text-center rounded-md p-1.5 border-2 border-red-200 cursor-pointer"
           >
             <DoorOpen />
           </div>
@@ -227,7 +227,7 @@ export default function Page() {
                     .then(() => setOnCreate(false));
                 }}
                 disabled={onCreate}
-                className="w-full"
+                className="w-full cursor-pointer"
               >
                 <Button
                   color="green"
@@ -297,7 +297,7 @@ export default function Page() {
               setOnRefreshGetSiswa(true);
               getSiswa.refetch().then(() => setOnRefreshGetSiswa(false));
             }}
-            className="w-full items-center justify-center text-center font-bold flex gap-2 text-yellow-500"
+            className="w-full items-center justify-center text-center font-bold flex gap-2 text-yellow-500 cursor-pointer"
           >
             History Absensi{" "}
             <RefreshCcw
